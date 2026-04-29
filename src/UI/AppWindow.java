@@ -8,10 +8,15 @@ public class AppWindow extends JFrame {
     public AppWindow(EYEApp app){
         super("FalconEYE");
         this.app = app;
-        setSize(800, 600);
-        setResizable(true);
-        //setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setLayout(new BorderLayout(0, 0));
+        //setSize(1600, 900);
+
+        Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        setBounds(bounds);
+        setResizable(false);
+        setLayout(new BorderLayout(0,0));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        add(new HierarchyView(), BorderLayout.WEST);
+        add(new HierarchyView(), BorderLayout.EAST);
     }
 }
