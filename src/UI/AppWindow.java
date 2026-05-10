@@ -17,6 +17,7 @@ public class AppWindow extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         add(new HierarchyView(), BorderLayout.WEST);
-        add(new HierarchyView(), BorderLayout.EAST);
+        add(new UnnamedRightPanel(), BorderLayout.EAST);
+        add(new MFDView(this), BorderLayout.CENTER);
     }
 }
