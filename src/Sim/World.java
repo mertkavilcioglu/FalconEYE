@@ -6,6 +6,8 @@ public class World {
 
     private EYEApp app;
 
+    //TODO: Entity list ekle ve update icinde bunları update et.
+
     public World(EYEApp app){
         this.app = app;
     }

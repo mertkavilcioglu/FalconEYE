@@ -1,4 +1,4 @@
-package Math;
+package Mathf;
 
 public class Vec3 {
 

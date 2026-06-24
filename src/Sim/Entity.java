@@ -1,29 +1,53 @@
 package Sim;
-import Math.Vec3;
+import Mathf.Vec3;
+import Sim.Components.Transform;
+import Sim.Components.Velocity;
+
+import java.util.HashMap;
 
 public class Entity {
 
-    private Vec3 pos;
-    private Vec3 speed;
+
     private boolean active;
 
-    public Entity(){
+    private HashMap<Class<? extends Component>, Component> componentList = new HashMap<>();
+    
+    public Entity(Vec3 pos, Vec3 velocity){
 
-    }
-
-    public Entity(Vec3 pos, Vec3 speed){
-        this.pos = pos;
-        this.speed = speed;
+        addComponent(new Transform(pos));
+        addComponent(new Velocity(velocity));
         active = true;
     }
 
-    public Vec3 getPos(){
-        return pos;
+    public void update(int deltaTime) {
+        for (Component component : componentList.values()) {
+            component.update(deltaTime);
+        }
     }
 
-    public Vec3 getSpeed(){
-        return speed;
+    public void addComponent(Component component) {
+        component.setParent(this);
+        componentList.put(component.getClass(), component);
     }
+
+    public <T extends Component> T getComponent(Class<T> componentClass) {
+        Component component = componentList.get(componentClass);
+
+        if (component == null) {
+            return null;
+        }
+
+        return componentClass.cast(component);
+    }
+
+    public boolean hasComponent(Class<? extends Component> componentClass) {
+        return componentList.containsKey(componentClass);
+    }
+
+    public void removeComponent(Class<? extends Component> componentClass) {
+        componentList.remove(componentClass);
+    }
+
 
     public boolean isActive(){
         return active;
