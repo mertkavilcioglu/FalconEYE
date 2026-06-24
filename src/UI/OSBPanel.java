@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class OSBPanel extends JPanel {
-    private HashMap<Integer,JButton> OSBList = new HashMap<>();
+    public static HashMap<Integer,JButton> OSBList = new HashMap<>();
 
     public OSBPanel(int width, int height, int[] buttonNumbers){
 
@@ -44,7 +44,7 @@ public class OSBPanel extends JPanel {
                 wrapper.setOpaque(false);
                 add(wrapper);
             }
-            System.out.println(OSBList.keySet());
+            //System.out.println(OSBList.keySet());
         }
 
         // LEFT & RIGHT
@@ -68,7 +68,7 @@ public class OSBPanel extends JPanel {
                 wrapper.setOpaque(false);
                 add(wrapper);
             }
-            System.out.println(OSBList.keySet());
+            //System.out.println(OSBList.keySet());
         }
     }
 }

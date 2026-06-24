@@ -9,9 +9,7 @@ public class Main{
         EYEApp app = new EYEApp();
         try {
             app.runWithWindow();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
+        } catch (InterruptedException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
 

@@ -33,13 +33,11 @@ public class MFDView extends JPanel {
             );
 
 
-    private JPanel radarScreen = new JPanel();
+    private MFDScreen radarScreen = new MFDScreen();
 
     public MFDView(JFrame frame){
 
         setLayout(new BorderLayout());
-
-        radarScreen.setBackground(Color.BLACK);
 
         add(topOSBs, BorderLayout.NORTH);
         add(botOSBs, BorderLayout.SOUTH);
