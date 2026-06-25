@@ -7,11 +7,11 @@ import java.util.HashMap;
 
 public class Entity {
 
-
+    private int id;
     private boolean active;
 
     private HashMap<Class<? extends Component>, Component> componentList = new HashMap<>();
-    
+
     public Entity(Vec3 pos, Vec3 velocity){
 
         addComponent(new Transform(pos));
@@ -55,5 +55,13 @@ public class Entity {
 
     public void setActive(boolean act){
         active = act;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

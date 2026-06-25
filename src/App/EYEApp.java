@@ -1,4 +1,5 @@
 package App;
+import Mathf.Vec3;
 import Sim.World;
 import UI.AppWindow;
 import javax.swing.*;
@@ -24,8 +25,6 @@ public class EYEApp {
                 simTimer = new Timer(delta, new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // UPDATE EVERY COMPONENT
-                        //System.out.println("UPDATE" + x++);
                         world.update(delta);
                         window.repaint();
                     }
