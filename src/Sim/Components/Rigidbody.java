@@ -1,6 +1,7 @@
 package Sim.Components;
 
 import Sim.Component;
+import Sim.Entity;
 
 public class Rigidbody extends Component {
 
@@ -23,10 +24,6 @@ public class Rigidbody extends Component {
             // rb operations
             movement();
         }
-        else if(parent != null){
-            transform = parent.getComponent(Transform.class);
-            velocity = parent.getComponent(Velocity.class);
-        }
     }
 
     public void movement(){
@@ -34,5 +31,13 @@ public class Rigidbody extends Component {
         transform.position.y += velocity.getVelocity().y;
         transform.position.z += velocity.getVelocity().z;
         //System.out.println("new pos: " + transform.position.x + " " + transform.position.y + " " + transform.position.z);
+    }
+
+    @Override
+    public void setParent(Entity parent){
+        super.setParent(parent);
+
+        transform = parent.getComponent(Transform.class);
+        velocity = parent.getComponent(Velocity.class);
     }
 }
