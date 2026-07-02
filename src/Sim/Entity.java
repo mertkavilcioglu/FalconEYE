@@ -13,11 +13,7 @@ public class Entity {
 
     private HashMap<Class<? extends Component>, Component> componentList = new HashMap<>();
 
-    public Entity(Vec3 pos, Vec3 velocity){
-
-        addComponent(new Transform(pos));
-        addComponent(new Velocity(velocity));
-        addComponent(new Rigidbody());
+    public Entity(){
         active = true;
     }
 

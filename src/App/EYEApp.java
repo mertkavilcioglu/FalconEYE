@@ -17,7 +17,7 @@ public class EYEApp {
         window.setVisible(true);
 
         world = new World(this);
-        //world.createEntity(new Vec3(1,1,1), new Vec3(2,2,2));
+        world.createEntity(new Vec3(1,1,1), new Vec3(2,2,2));
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override

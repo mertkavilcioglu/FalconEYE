@@ -20,14 +20,19 @@ public class Rigidbody extends Component {
     @Override
     public void update(int deltaTime) {
         if(transform != null && velocity != null){
-            //ops
-            //System.out.println("Rigidbody is ready to operate");
-            // TODO: 1. hızı oku ve hareket ettir.
+            // rb operations
+            movement();
         }
         else if(parent != null){
             transform = parent.getComponent(Transform.class);
             velocity = parent.getComponent(Velocity.class);
-            //System.out.println("Rigidbody transform and velocity found null in update, assigned. parent is not null btw");
         }
+    }
+
+    public void movement(){
+        transform.position.x += velocity.getVelocity().x;
+        transform.position.y += velocity.getVelocity().y;
+        transform.position.z += velocity.getVelocity().z;
+        //System.out.println("new pos: " + transform.position.x + " " + transform.position.y + " " + transform.position.z);
     }
 }
