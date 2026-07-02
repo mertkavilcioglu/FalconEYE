@@ -1,7 +1,7 @@
 package Sim;
 
 public abstract class Component {
-    protected Entity parent;
+    protected Entity parent = null;
 
     public Component(){
 

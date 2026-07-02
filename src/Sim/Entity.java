@@ -1,5 +1,6 @@
 package Sim;
 import Mathf.Vec3;
+import Sim.Components.Rigidbody;
 import Sim.Components.Transform;
 import Sim.Components.Velocity;
 
@@ -16,6 +17,7 @@ public class Entity {
 
         addComponent(new Transform(pos));
         addComponent(new Velocity(velocity));
+        addComponent(new Rigidbody());
         active = true;
     }
 
