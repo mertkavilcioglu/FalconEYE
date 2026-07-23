@@ -1,0 +1,20 @@
+package UI.Screen;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class RightOverlayPanel extends JPanel {
+    public RightOverlayPanel(){
+        setBackground(Color.BLACK);
+
+        int cells = 5;
+        setLayout(new GridLayout(cells,1));
+
+        for(int i=0 ; i<cells ; i++){
+            JLabel text = new JLabel("section " + (i+1));
+            text.setHorizontalAlignment(SwingConstants.CENTER);
+            text.setForeground(Color.WHITE);
+            add(text);
+        }
+    }
+}

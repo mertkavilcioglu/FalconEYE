@@ -1,5 +1,7 @@
 package UI;
 
+import UI.Screen.MFDScreen;
+
 import javax.swing.*;
 import java.awt.*;
 
