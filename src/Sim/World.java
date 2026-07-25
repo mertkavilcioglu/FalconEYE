@@ -18,29 +18,22 @@ public class World {
 
     public static final double START_ALTITUDE = 3048.0; // 10.000 feet
     public static final double WORLD_ORIGIN = 100000.0;
-
-    private MFDCanvas mfdCanvas;
     public Entity player;
 
 
     public World(EYEApp app){
         this.app = app;
-        mfdCanvas = new MFDCanvas(this);
-        mfdCanvas.setBackground(Color.BLACK);
 
         player = createPlayer();
         createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 120000.0, 3200.0), new Vec3(0.0, 270.0, 0.0));
         createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 145000.0, 3000.0), new Vec3(0.0, -280.0, 0.0));
         createEntity(Entity.IFF.HOSTILE, new Vec3(115000.0, 125000.0, 5000.0), new Vec3(-180.0, -150.0, 0.0));
-        app.getWindow().getMfdView().getRadarScreen().add(mfdCanvas, BorderLayout.CENTER);
-
     }
 
     public void update(int delta){
         for(Entity e : entities.values()){
             e.update(delta);
         }
-        mfdCanvas.repaint();
     }
 
     public Entity createEntity(Entity.IFF iff, Vec3 pos, Vec3 velocity){
@@ -80,8 +73,5 @@ public class World {
         return entities;
     }
 
-    public MFDCanvas getMFDCanvas() {
-        return mfdCanvas;
-    }
 
 }

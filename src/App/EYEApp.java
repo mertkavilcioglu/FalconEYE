@@ -15,9 +15,9 @@ public class EYEApp {
 
 
     public void runWithWindow() throws InterruptedException, InvocationTargetException {
+        world = new World(this);
         window = new AppWindow(this);
         window.setVisible(true);
-        world = new World(this);
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -27,7 +27,11 @@ public class EYEApp {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         world.update(delta);
-                        window.repaint();
+                        //window.repaint(); //TODO: herhangi bir panelin çiziminde sıkıntı olursa burayı tekrar aç ve dene
+                        window.getMfdView()
+                                .getRadarScreen()
+                                .getMfdCanvas()
+                                .repaint();
                     }
                 });
                 simTimer.start();
@@ -37,5 +41,9 @@ public class EYEApp {
 
     public AppWindow getWindow(){
         return window;
+    }
+
+    public World getWorld(){
+        return world;
     }
 }
