@@ -5,7 +5,7 @@ import Mathf.Vec3;
 
 public class Transform extends Component {
 
-    public Vec3 position = new Vec3();
+    public Vec3 position = new Vec3(); // meters
     public Vec3 rotation;
 
     public Transform(double posX, double posY, double posZ){

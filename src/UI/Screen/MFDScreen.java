@@ -1,5 +1,7 @@
 package UI.Screen;
 
+import App.EYEApp;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -12,7 +14,7 @@ public class MFDScreen extends JPanel {
     RightOverlayPanel overlayEast = new RightOverlayPanel();
     LeftOverlayPanel overlayWest = new LeftOverlayPanel();
 
-    public MFDScreen(){
+    public MFDScreen(EYEApp app){
         setBackground(Color.BLACK);
         setLayout(new BorderLayout());
         add(overlayNorth, BorderLayout.NORTH);

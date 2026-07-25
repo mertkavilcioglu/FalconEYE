@@ -1,5 +1,6 @@
 package App;
 import Mathf.Vec3;
+import Sim.Entity;
 import Sim.World;
 import UI.AppWindow;
 import javax.swing.*;
@@ -12,12 +13,11 @@ public class EYEApp {
     private World world;
     private int delta = 250;
 
+
     public void runWithWindow() throws InterruptedException, InvocationTargetException {
         window = new AppWindow(this);
         window.setVisible(true);
-
         world = new World(this);
-        world.createEntity(new Vec3(1,1,1), new Vec3(2,2,2));
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -33,5 +33,9 @@ public class EYEApp {
                 simTimer.start();
             }
         });
+    }
+
+    public AppWindow getWindow(){
+        return window;
     }
 }

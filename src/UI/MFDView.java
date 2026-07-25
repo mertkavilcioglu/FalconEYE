@@ -1,11 +1,32 @@
 package UI;
 
+import App.EYEApp;
 import UI.Screen.MFDScreen;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MFDView extends JPanel {
+
+    private MFDScreen radarScreen;
+
+    public MFDView(EYEApp app){
+
+        setLayout(new BorderLayout());
+
+        add(topOSBs, BorderLayout.NORTH);
+        add(botOSBs, BorderLayout.SOUTH);
+        add(leftOSBs, BorderLayout.WEST);
+        add(rightOSBs, BorderLayout.EAST);
+        radarScreen = new MFDScreen(app);
+        add(radarScreen, BorderLayout.CENTER);
+    }
+
+    public MFDScreen getRadarScreen(){
+        return radarScreen;
+    }
+
+
     private OSBPanel topOSBs =
             new OSBPanel(
                     0,
@@ -33,19 +54,4 @@ public class MFDView extends JPanel {
                     0,
                     new int[]{20,19,18,17,16}
             );
-
-
-    private MFDScreen radarScreen = new MFDScreen();
-
-    public MFDView(JFrame frame){
-
-        setLayout(new BorderLayout());
-
-        add(topOSBs, BorderLayout.NORTH);
-        add(botOSBs, BorderLayout.SOUTH);
-        add(leftOSBs, BorderLayout.WEST);
-        add(rightOSBs, BorderLayout.EAST);
-
-        add(radarScreen, BorderLayout.CENTER);
-    }
 }

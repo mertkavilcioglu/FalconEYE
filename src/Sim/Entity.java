@@ -10,11 +10,20 @@ public class Entity {
 
     private int id;
     private boolean active;
+    private IFF iff;
 
     private HashMap<Class<? extends Component>, Component> componentList = new HashMap<>();
 
-    public Entity(){
+    public enum IFF {
+        FRIEND,
+        HOSTILE,
+        UNKNOWN,
+        NEUTRAL
+    }
+
+    public Entity(IFF iff){
         active = true;
+        this.iff = iff;
     }
 
     public void update(int deltaTime) {
@@ -61,5 +70,9 @@ public class Entity {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public IFF getIff(){
+        return iff;
     }
 }

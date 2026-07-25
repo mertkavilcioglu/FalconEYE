@@ -5,10 +5,20 @@ import java.awt.*;
 
 public class AppWindow extends JFrame {
     private EYEApp app;
+    private HierarchyView hierarchyView;
+    private UnnamedRightPanel unnamedRightPanel;
+    private MFDView mfdView;
+
+
     public AppWindow(EYEApp app){
         super("FalconEYE");
         this.app = app;
         //setSize(1600, 900);
+
+        hierarchyView = new HierarchyView();
+        unnamedRightPanel = new UnnamedRightPanel();
+        mfdView = new MFDView(app);
+
 
         Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         setBounds(bounds);
@@ -16,8 +26,12 @@ public class AppWindow extends JFrame {
         setLayout(new BorderLayout(0,0));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        add(new HierarchyView(), BorderLayout.WEST);
-        add(new UnnamedRightPanel(), BorderLayout.EAST);
-        add(new MFDView(this), BorderLayout.CENTER);
+        add(hierarchyView, BorderLayout.WEST);
+        add(unnamedRightPanel, BorderLayout.EAST);
+        add(mfdView, BorderLayout.CENTER);
+    }
+
+    public MFDView getMfdView(){
+        return mfdView;
     }
 }
