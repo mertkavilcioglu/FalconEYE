@@ -26,7 +26,7 @@ public class World {
 
         player = createPlayer();
         createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 120000.0, 3200.0), new Vec3(0.0, 270.0, 0.0));
-        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 145000.0, 3000.0), new Vec3(0.0, -280.0, 0.0));
+        createEntity(Entity.IFF.FRIEND, new Vec3(100000.0, 145000.0, 3000.0), new Vec3(0.0, -280.0, 0.0));
         createEntity(Entity.IFF.HOSTILE, new Vec3(115000.0, 125000.0, 5000.0), new Vec3(-180.0, -150.0, 0.0));
     }
 
