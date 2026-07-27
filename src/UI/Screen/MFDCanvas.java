@@ -50,6 +50,7 @@ public class MFDCanvas extends JPanel {
 
         //TODO: RADARDAN GELEN DATAYA GÖRE RADAR BUNLARDAN BİRİNİ ÇİZDİRECECK,
         // TODO: FONKSİYON RADAR REQUESET PARAMETRESİ ALABİLİR BELKİ
+
         //test cases
 
         //drawContact(g2, screenX, screenY, radius);
@@ -99,9 +100,20 @@ public class MFDCanvas extends JPanel {
                 break;
             case HOSTILE:
                 gRot.setColor(Color.RED);
-                gRot.drawOval(centerX - radius / 2, centerY - radius / 2, radius, radius);
-                //TODO: Oval değil üçgen sembol cizdirt
-                drawTrackLine(g2, Entity.IFF.HOSTILE, heading, centerX,centerY);
+
+                int nose = 2 * radius / 3;
+                int base = radius / 3;
+                int halfWidth = (int)(radius / Math.sqrt(3));
+
+                Polygon triangle = new Polygon();
+
+                triangle.addPoint(centerX, centerY - nose);
+                triangle.addPoint(centerX - halfWidth, centerY + base);
+                triangle.addPoint(centerX + halfWidth, centerY + base);
+
+                gRot.drawPolygon(triangle);
+                gRot.drawLine(centerX, centerY - nose, centerX, centerY - nose - radius);
+
                 break;
             case UNKNOWN:
                 break;
@@ -131,7 +143,7 @@ public class MFDCanvas extends JPanel {
                 g2.setColor(Color.LIGHT_GRAY);
                 break;
         }
-        g2.drawLine(centerX, centerY, endX, endY);
+        g2.drawLine(centerX+(endX-centerX)/2*19/20, centerY+(endY-centerY)/2*19/20, endX, endY);
     }
 
     public void defineScale(int rangeMeters){
@@ -139,9 +151,7 @@ public class MFDCanvas extends JPanel {
     }
 
     private double getHeading(Velocity vel) {
-        double heading = Math.toDegrees(
-                Math.atan2(vel.getVelocity().x, vel.getVelocity().y));
-
+        double heading = Math.toDegrees(Math.atan2(vel.getVelocity().x, vel.getVelocity().y));
         return heading < 0 ? heading + 360 : heading;
     }
 }
