@@ -17,6 +17,7 @@ public class Entity {
     public enum IFF {
         FRIEND,
         HOSTILE,
+        SUSPECT,
         UNKNOWN,
         NEUTRAL
     }
