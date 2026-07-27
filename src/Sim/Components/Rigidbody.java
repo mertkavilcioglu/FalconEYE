@@ -22,14 +22,15 @@ public class Rigidbody extends Component {
     public void update(int deltaTime) {
         if(transform != null && velocity != null){
             // rb operations
-            movement();
+            movement(deltaTime);
         }
     }
 
-    public void movement(){
-        transform.position.x += velocity.getVelocity().x;
-        transform.position.y += velocity.getVelocity().y;
-        transform.position.z += velocity.getVelocity().z;
+    public void movement(int deltaTime){
+        double deltaSeconds = deltaTime / 1000.0;
+        transform.position.x += velocity.getVelocity().x * deltaSeconds;
+        transform.position.y += velocity.getVelocity().y * deltaSeconds;
+        transform.position.z += velocity.getVelocity().z * deltaSeconds;
         //System.out.println("new pos: " + transform.position.x + " " + transform.position.y + " " + transform.position.z);
     }
 

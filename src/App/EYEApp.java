@@ -11,7 +11,7 @@ public class EYEApp {
     private Timer simTimer;
     private AppWindow window;
     private World world;
-    private int delta = 250;
+    private int delta = 50;
 
 
     public void runWithWindow() throws InterruptedException, InvocationTargetException {
