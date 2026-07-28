@@ -2,6 +2,7 @@ package Sim;
 
 import App.EYEApp;
 import Mathf.Vec3;
+import Sim.Components.Radar;
 import Sim.Components.Rigidbody;
 import Sim.Components.Transform;
 import Sim.Components.Velocity;
@@ -24,10 +25,11 @@ public class World {
     public World(EYEApp app){
         this.app = app;
 
-        player = createPlayer();
         createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 120000.0, 3200.0), new Vec3(0.0, 270.0, 0.0));
         createEntity(Entity.IFF.FRIEND, new Vec3(100000.0, 145000.0, 3000.0), new Vec3(0.0, -280.0, 0.0));
         createEntity(Entity.IFF.HOSTILE, new Vec3(115000.0, 125000.0, 5000.0), new Vec3(-180.0, -150.0, 0.0));
+
+        player = createPlayer();
     }
 
     public void update(int delta){
@@ -37,7 +39,7 @@ public class World {
     }
 
     public Entity createEntity(Entity.IFF iff, Vec3 pos, Vec3 velocity){
-        Entity e = new Entity(iff);
+        Entity e = new Entity(this, iff);
 
         e.addComponent(new Transform(pos));
         e.addComponent(new Velocity(velocity));
@@ -49,7 +51,7 @@ public class World {
     }
 
     public Entity createPlayer(){
-        Entity e = new Entity(Entity.IFF.FRIEND);
+        Entity e = new Entity(this, Entity.IFF.FRIEND);
 
         Vec3 pos = new Vec3(WORLD_ORIGIN, WORLD_ORIGIN, START_ALTITUDE);
         e.addComponent(new Transform(pos));
@@ -58,6 +60,9 @@ public class World {
         e.addComponent(new Velocity(vel));
 
         e.addComponent(new Rigidbody());
+
+        Radar radar = new Radar();
+        e.addComponent(radar);
 
         e.setId(entityId++);
         entities.put(e.getId(), e);

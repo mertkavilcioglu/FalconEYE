@@ -1,9 +1,11 @@
 package UI.Screen;
 
 import Mathf.Vec3;
+import Sim.Components.Radar;
 import Sim.Components.Transform;
 import Sim.Components.Velocity;
 import Sim.Entity;
+import Sim.RadarContact;
 import Sim.World;
 
 import javax.swing.*;
@@ -13,7 +15,6 @@ public class MFDCanvas extends JPanel {
 
     private World world;
     private int radius = 24;
-    private int radarRangeMeters = 74080; // 40NM //TODO: BUNU BURADA TUTMA RADAR COMPONENTİNDEN AL VE GÜNCELLE
     private double scale;
 
     public MFDCanvas(World world){
@@ -25,16 +26,16 @@ public class MFDCanvas extends JPanel {
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        defineScale(radarRangeMeters);
+        defineScale(world.player.getComponent(Radar.class).getRange());
         drawEntities(g2);
     }
 
     private void drawEntities(Graphics2D g2) {
 
-        for (Entity e : world.getEntities().values()) {
-            if (e == world.player)
+        for (RadarContact c : world.player.getComponent(Radar.class).getContacts().values()) {
+            if (c.getTarget() == world.player)
                 continue;
-            drawEntity(g2, e);
+            drawEntity(g2, c.getTarget());
         }
     }
 
@@ -55,7 +56,7 @@ public class MFDCanvas extends JPanel {
 
         //drawContact(g2, screenX, screenY, radius);
         //drawTrack(g2, e.getComponent(Velocity.class), screenX,screenY,radius);
-        drawIFF(g2, e.getComponent(Velocity.class),e.getIff(), screenX,screenY,radius);
+        drawIdentified(g2, e.getComponent(Velocity.class),e.getIff(), screenX,screenY,radius);
     }
 
 
@@ -85,7 +86,7 @@ public class MFDCanvas extends JPanel {
         gRot.dispose();
     }
 
-    private void drawIFF(Graphics2D g2, Velocity vel, Entity.IFF iff, int centerX, int centerY, int radius) {
+    private void drawIdentified(Graphics2D g2, Velocity vel, Entity.IFF iff, int centerX, int centerY, int radius) {
 
         double heading = getHeading(vel);
 

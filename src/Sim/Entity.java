@@ -11,6 +11,7 @@ public class Entity {
     private int id;
     private boolean active;
     private IFF iff;
+    private World world;
 
     private HashMap<Class<? extends Component>, Component> componentList = new HashMap<>();
 
@@ -22,9 +23,10 @@ public class Entity {
         NEUTRAL
     }
 
-    public Entity(IFF iff){
+    public Entity(World world, IFF iff){
         active = true;
         this.iff = iff;
+        this.world = world;
     }
 
     public void update(int deltaTime) {
@@ -75,5 +77,9 @@ public class Entity {
 
     public IFF getIff(){
         return iff;
+    }
+
+    public World getWorld(){
+        return world;
     }
 }
