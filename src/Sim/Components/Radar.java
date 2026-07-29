@@ -5,7 +5,6 @@ import Sim.Component;
 import Sim.Entity;
 import Sim.RadarContact;
 
-import javax.management.relation.Relation;
 import java.util.HashMap;
 
 
@@ -13,7 +12,9 @@ public class Radar extends Component {
     private int range = 74080; // 40NM
     private double azimuth = 60;
     private double elevation = 4;
-    private double heading = 0;
+
+    private double heading = 0; // horizontal for azimuth
+    private double pitch = 0; // vertical for elevation
     private HashMap<Integer, RadarContact> contacts = new HashMap<>();
 
     public Radar(){
@@ -47,10 +48,14 @@ public class Radar extends Component {
 
 
             // check azimuth
-            double bearing = getBearing(relativePos);
-            double angleDiff = getAngleDifference(bearing, heading);
-            if (Math.abs(angleDiff) > azimuth / 2.0)
+            if(!isInAzimuth(relativePos))
                 continue;
+
+            // check elevation
+            if(!isInElevation(relativePos))
+                continue;
+
+
 
 
 
@@ -126,6 +131,26 @@ public class Radar extends Component {
             diff += 360;
 
         return diff;
+    }
+
+    public boolean isInAzimuth(Vec3 relativePos){
+        double bearing = getBearing(relativePos);
+        double angleDiff = getAngleDifference(bearing, heading);
+        return !(Math.abs(angleDiff) > azimuth / 2.0);
+
+    }
+
+    private double getElevationAngle(Vec3 relativePos) {
+
+        double horizontalDistance = Math.sqrt(relativePos.x * relativePos.x + relativePos.y * relativePos.y);
+
+        return Math.toDegrees(Math.atan2(relativePos.z, horizontalDistance));
+    }
+
+    public boolean isInElevation(Vec3 relativePos){
+        double elevationAngle = getElevationAngle(relativePos);
+        double angleDiff = getAngleDifference(elevationAngle, pitch);
+        return Math.abs(angleDiff) <= elevation / 2.0;
     }
 
 }
