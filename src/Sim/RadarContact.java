@@ -22,6 +22,8 @@ public class RadarContact {
         this.targetID = targetID;
         this.targetPos = targetPos;
         this.targetVel = targetVel;
+        confidence = 1;
+        displayState = DisplayState.CONTACT;
     }
 
     public int getTargetID(){

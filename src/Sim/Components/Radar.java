@@ -18,7 +18,7 @@ public class Radar extends Component {
     private HashMap<Integer, RadarContact> contacts = new HashMap<>();
 
     private double beamWidth = 2.0;
-    private double beamHeading = -30.0;
+    private double beamOffset = -30.0;
     private double beamSpeed = 120.0;
     private boolean sweepingRight = true;
 
@@ -68,54 +68,47 @@ public class Radar extends Component {
 
 
 
-            Velocity targetVelocity = new Velocity(
-                    e.getComponent(Velocity.class).getVelocity().x,
-                    e.getComponent(Velocity.class).getVelocity().y,
-                    e.getComponent(Velocity.class).getVelocity().z
-            );
+//            Velocity targetVelocity = new Velocity(
+//                    e.getComponent(Velocity.class).getVelocity().x,
+//                    e.getComponent(Velocity.class).getVelocity().y,
+//                    e.getComponent(Velocity.class).getVelocity().z
+//            );
+//
+//            RadarContact data = new RadarContact(e.getId(), new Vec3(
+//                    targetTransform.position.x,
+//                    targetTransform.position.y,
+//                    targetTransform.position.z),
+//                    targetVelocity
+//            );
 
-            RadarContact data = new RadarContact(e.getId(), new Vec3(
-                    targetTransform.position.x,
-                    targetTransform.position.y,
-                    targetTransform.position.z),
-                    targetVelocity
-            );
-            if(!contacts.containsKey(e.getId())){
-                contacts.put(e.getId(),data );
+
+            RadarContact contact = contacts.get(e.getId());
+
+            if(contact == null){
+                createContact(e);
             }
             else{
-                contacts.replace(e.getId(), data);
+                updateContact(contact, e);
             }
-
-            /*
-                 if(!contacts.containsKey(e.getId())) yerine
-                 RadarContact c = contacts.get(id);
-
-                    if(c == null)
-                        createContact();
-                    else
-                        updateContact();
-                   yapabilirsin
-             */
         }
     }
 
     private void updateBeam(double deltaSeconds){
 
         if(sweepingRight){
-            beamHeading += beamSpeed * deltaSeconds;
+            beamOffset += beamSpeed * deltaSeconds;
 
-            if(beamHeading >= azimuth / 2.0){
-                beamHeading = azimuth / 2.0;
+            if(beamOffset >= azimuth / 2.0){
+                beamOffset = azimuth / 2.0;
                 sweepingRight = false;
             }
         }
         else{
 
-            beamHeading -= beamSpeed * deltaSeconds;
+            beamOffset -= beamSpeed * deltaSeconds;
 
-            if(beamHeading <= -azimuth / 2.0){
-                beamHeading = -azimuth / 2.0;
+            if(beamOffset <= -azimuth / 2.0){
+                beamOffset = -azimuth / 2.0;
                 sweepingRight = true;
             }
         }
@@ -161,7 +154,7 @@ public class Radar extends Component {
     public boolean isInAzimuth(Vec3 relativePos){
 
         double bearing = getBearing(relativePos);
-        double currentBeamHeading = heading + beamHeading;
+        double currentBeamHeading = heading + beamOffset;
         double angleDiff = getAngleDifference(bearing, currentBeamHeading);
 
         return Math.abs(angleDiff) <= beamWidth / 2.0;
@@ -179,6 +172,20 @@ public class Radar extends Component {
         double elevationAngle = getElevationAngle(relativePos);
         double angleDiff = getAngleDifference(elevationAngle, pitch);
         return Math.abs(angleDiff) <= elevation / 2.0;
+    }
+
+    private void createContact(Entity e){
+        Transform transform = e.getComponent(Transform.class);
+        Velocity velocity = e.getComponent(Velocity.class);
+        RadarContact contact = new RadarContact(e.getId(),
+                new Vec3(transform.position.x, transform.position.y, transform.position.z),
+                new Velocity(velocity.getVelocity().x, velocity.getVelocity().y, velocity.getVelocity().z));
+        contacts.put(e.getId(), contact);
+    }
+
+
+    private void updateContact(RadarContact c, Entity e){
+
     }
 
 }
