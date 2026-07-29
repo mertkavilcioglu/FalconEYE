@@ -39,7 +39,7 @@ public class MFDCanvas extends JPanel {
         }
     }
 
-    private void drawEntity(Graphics2D g2, RadarContact contact) {
+    private void drawEntity(Graphics2D g2, RadarContact contact) {  // TODO: relative pos hesaplaması canvasın işi değil
         Vec3 targetPos = contact.getTargetPos();
         Vec3 playerPos = world.player.getComponent(Transform.class).position;
         Vec3 relativePos = new Vec3(targetPos.x-playerPos.x, targetPos.y-playerPos.y, targetPos.z-playerPos.z);
