@@ -17,6 +17,11 @@ public class Radar extends Component {
     private double pitch = 0; // vertical for elevation
     private HashMap<Integer, RadarContact> contacts = new HashMap<>();
 
+    private double beamWidth = 2.0;
+    private double beamHeading = -30.0;
+    private double beamSpeed = 120.0;
+    private boolean sweepingRight = true;
+
     public Radar(){
 
     }
@@ -24,6 +29,8 @@ public class Radar extends Component {
     @Override
     public void update(int deltaTime) {
        // System.out.println("RADAR");
+        double deltaSeconds = deltaTime / 1000.0;
+        updateBeam(deltaSeconds);
         scan();
     }
 
@@ -81,21 +88,39 @@ public class Radar extends Component {
             }
 
             /*
-
                  if(!contacts.containsKey(e.getId())) yerine
-
                  RadarContact c = contacts.get(id);
 
                     if(c == null)
                         createContact();
                     else
                         updateContact();
-
                    yapabilirsin
-
              */
-
         }
+    }
+
+    private void updateBeam(double deltaSeconds){
+
+        if(sweepingRight){
+            beamHeading += beamSpeed * deltaSeconds;
+
+            if(beamHeading >= azimuth / 2.0){
+                beamHeading = azimuth / 2.0;
+                sweepingRight = false;
+            }
+        }
+        else{
+
+            beamHeading -= beamSpeed * deltaSeconds;
+
+            if(beamHeading <= -azimuth / 2.0){
+                beamHeading = -azimuth / 2.0;
+                sweepingRight = true;
+            }
+        }
+
+        //System.out.println(beamHeading);
     }
 
     public boolean isInRange(Transform parent, Transform target){
@@ -134,11 +159,14 @@ public class Radar extends Component {
     }
 
     public boolean isInAzimuth(Vec3 relativePos){
-        double bearing = getBearing(relativePos);
-        double angleDiff = getAngleDifference(bearing, heading);
-        return !(Math.abs(angleDiff) > azimuth / 2.0);
 
+        double bearing = getBearing(relativePos);
+        double currentBeamHeading = heading + beamHeading;
+        double angleDiff = getAngleDifference(bearing, currentBeamHeading);
+
+        return Math.abs(angleDiff) <= beamWidth / 2.0;
     }
+
 
     private double getElevationAngle(Vec3 relativePos) {
 
