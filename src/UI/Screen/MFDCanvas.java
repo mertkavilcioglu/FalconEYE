@@ -33,14 +33,14 @@ public class MFDCanvas extends JPanel {
     private void drawEntities(Graphics2D g2) {
 
         for (RadarContact c : world.player.getComponent(Radar.class).getContacts().values()) {
-            if (c.getTarget() == world.player)
+            if (c.getTargetID() == world.player.getId())
                 continue;
-            drawEntity(g2, c.getTarget());
+            drawEntity(g2, c);
         }
     }
 
-    private void drawEntity(Graphics2D g2, Entity e) {
-        Vec3 targetPos = e.getComponent(Transform.class).position;
+    private void drawEntity(Graphics2D g2, RadarContact contact) {
+        Vec3 targetPos = contact.getTargetPos();
         Vec3 playerPos = world.player.getComponent(Transform.class).position;
         Vec3 relativePos = new Vec3(targetPos.x-playerPos.x, targetPos.y-playerPos.y, targetPos.z-playerPos.z);
 
@@ -53,10 +53,9 @@ public class MFDCanvas extends JPanel {
         // TODO: FONKSİYON RADAR REQUESET PARAMETRESİ ALABİLİR BELKİ
 
         //test cases
-
         //drawContact(g2, screenX, screenY, radius);
         //drawTrack(g2, e.getComponent(Velocity.class), screenX,screenY,radius);
-        drawIdentified(g2, e.getComponent(Velocity.class),e.getIff(), screenX,screenY,radius);
+        drawIdentified(g2, contact.getTargetVel(),world.getEntities().get(contact.getTargetID()).getIff(), screenX,screenY,radius);
     }
 
 

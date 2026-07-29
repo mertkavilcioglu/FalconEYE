@@ -1,5 +1,6 @@
 package Sim.Components;
 
+import Mathf.Vec3;
 import Sim.Component;
 import Sim.Entity;
 import Sim.RadarContact;
@@ -26,15 +27,20 @@ public class Radar extends Component {
         for(Entity e : parent.getWorld().getEntities().values()){
             if(e == parent)
                 continue;
+
+            Transform t = e.getComponent(Transform.class);
+            Velocity v = new Velocity(
+                    e.getComponent(Velocity.class).getVelocity().x,
+                    e.getComponent(Velocity.class).getVelocity().y,
+                    e.getComponent(Velocity.class).getVelocity().z
+            );
+
+            RadarContact data = new RadarContact(e.getId(), new Vec3(t.position.x, t.position.y, t.position.z), v);
             if(!contacts.containsKey(e.getId())){
-                RadarContact data = new RadarContact(e); //todo: radar taraması yaparken contacts icinde yoksa ekle,
-                // TODO: varsa data güncelle yap ve boylelikle RadarContact icinde Entity tutma konum velocity tut.
-                // TODO: Şimdilik entity kullanıyor olacak
                 contacts.put(e.getId(),data );
             }
             else{
-                //TODO: Var olan datayı yeni bilgilerle güncelle ki next frame'de radar yeni konumları çizsin
-                //TODO: burayı yapınca canvastaki drawEntity parametresini de entity değil radarContact'a çevir
+                contacts.replace(e.getId(), data);
             }
 
             /*
