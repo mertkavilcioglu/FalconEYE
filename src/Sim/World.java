@@ -25,9 +25,12 @@ public class World {
     public World(EYEApp app){
         this.app = app;
 
-        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 120000.0, 3200.0), new Vec3(0.0, 270.0, 0.0));
-        createEntity(Entity.IFF.FRIEND, new Vec3(100000.0, 145000.0, 3000.0), new Vec3(0.0, -280.0, 0.0));
-        createEntity(Entity.IFF.HOSTILE, new Vec3(115000.0, 125000.0, 5000.0), new Vec3(-180.0, -150.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 120000.0, 3048.0), new Vec3(0.0, 270.0, 0.0));
+        createEntity(Entity.IFF.FRIEND, new Vec3(100000.0, 173000.0, 3048.0), new Vec3(0.0, -280.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 176000.0, 3048.0), new Vec3(-180.0, -150.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(140000.0, 140000.0, 3048.0), new Vec3(-180.0, -150.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 100000.0, 85000.0), new Vec3(-180.0, -150.0, 0.0));
+
 
         player = createPlayer();
     }

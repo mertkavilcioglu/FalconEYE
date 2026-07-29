@@ -12,13 +12,11 @@ public class Vec3 {
 
     public Vec3(){ }
 
-    public double getDistanceBetween(Vec3 vector1, Vec3 vector2){
-        double dx = vector2.x - vector1.x;
-        double dy = vector2.y - vector1.y;
-        double dz = vector2.z - vector1.z;
-
+    public double distance(Vec3 other){
+        double dx = other.x - x;
+        double dy = other.y - y;
+        double dz = other.z - z;
         return Math.sqrt(dx*dx + dy*dy + dz*dz);
     }
-
 
 }

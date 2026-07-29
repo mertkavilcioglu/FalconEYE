@@ -28,14 +28,29 @@ public class Radar extends Component {
             if(e == parent)
                 continue;
 
-            Transform t = e.getComponent(Transform.class);
-            Velocity v = new Velocity(
+            Transform parentTransform = parent.getComponent(Transform.class);
+            Transform targetTransform = e.getComponent(Transform.class);
+
+            // check distance
+            if(!isInRange(parentTransform, targetTransform))
+                continue;
+
+
+
+
+
+            Velocity targetVelocity = new Velocity(
                     e.getComponent(Velocity.class).getVelocity().x,
                     e.getComponent(Velocity.class).getVelocity().y,
                     e.getComponent(Velocity.class).getVelocity().z
             );
 
-            RadarContact data = new RadarContact(e.getId(), new Vec3(t.position.x, t.position.y, t.position.z), v);
+            RadarContact data = new RadarContact(e.getId(), new Vec3(
+                    targetTransform.position.x,
+                    targetTransform.position.y,
+                    targetTransform.position.z),
+                    targetVelocity
+            );
             if(!contacts.containsKey(e.getId())){
                 contacts.put(e.getId(),data );
             }
@@ -59,6 +74,12 @@ public class Radar extends Component {
              */
 
         }
+    }
+
+    public boolean isInRange(Transform parent, Transform target){
+
+        double distance = parent.position.distance(target.position);
+        return !(distance > range);
     }
 
     public int getRange(){
