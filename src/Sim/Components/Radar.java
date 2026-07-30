@@ -6,6 +6,7 @@ import Sim.Entity;
 import Sim.RadarContact;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 
 public class Radar extends Component {
@@ -22,17 +23,20 @@ public class Radar extends Component {
     private double beamSpeed = 60.0;
     private boolean sweepingRight = true;
 
+    private long contactTimeout = 5000; // ms
+
     public Radar(){
 
     }
 
     @Override
     public void update(int deltaTime) {
-       // System.out.println("RADAR");
         double deltaSeconds = deltaTime / 1000.0;
         updateBeam(deltaSeconds);
         predictContacts(deltaSeconds);
+        //decreaseConfidence();
         scan();
+        removeExpiredContacts();
     }
 
     public void scan(){
@@ -54,7 +58,6 @@ public class Radar extends Component {
             if(!isInRange(parentTransform, targetTransform))
                 continue;
 
-
             // check azimuth
             if(!isInAzimuth(relativePos))
                 continue;
@@ -62,26 +65,6 @@ public class Radar extends Component {
             // check elevation
             if(!isInElevation(relativePos))
                 continue;
-
-
-
-
-
-
-
-//            Velocity targetVelocity = new Velocity(
-//                    e.getComponent(Velocity.class).getVelocity().x,
-//                    e.getComponent(Velocity.class).getVelocity().y,
-//                    e.getComponent(Velocity.class).getVelocity().z
-//            );
-//
-//            RadarContact data = new RadarContact(e.getId(), new Vec3(
-//                    targetTransform.position.x,
-//                    targetTransform.position.y,
-//                    targetTransform.position.z),
-//                    targetVelocity
-//            );
-
 
             RadarContact contact = contacts.get(e.getId());
 
@@ -102,6 +85,7 @@ public class Radar extends Component {
             if(beamOffset >= azimuth / 2.0){
                 beamOffset = azimuth / 2.0;
                 sweepingRight = false;
+                onSweepFinished();
             }
         }
         else{
@@ -111,10 +95,9 @@ public class Radar extends Component {
             if(beamOffset <= -azimuth / 2.0){
                 beamOffset = -azimuth / 2.0;
                 sweepingRight = true;
+                onSweepFinished();
             }
         }
-
-        //System.out.println(beamHeading);
     }
 
     public boolean isInRange(Transform parent, Transform target){
@@ -178,9 +161,15 @@ public class Radar extends Component {
     private void createContact(Entity e){
         Transform transform = e.getComponent(Transform.class);
         Velocity velocity = e.getComponent(Velocity.class);
+
         RadarContact contact = new RadarContact(e.getId(),
-                new Vec3(transform.position.x, transform.position.y, transform.position.z),
-                new Velocity(velocity.getVelocity().x, velocity.getVelocity().y, velocity.getVelocity().z));
+                new Vec3(transform.position.x,
+                        transform.position.y,
+                        transform.position.z),
+                new Velocity(velocity.getVelocity().x,
+                        velocity.getVelocity().y,
+                        velocity.getVelocity().z));
+
         contacts.put(e.getId(), contact);
     }
 
@@ -213,8 +202,8 @@ public class Radar extends Component {
                 velocity.getVelocity().z));
 
         c.setLastDetectionTime(System.currentTimeMillis());
-
         c.increaseConfidence();
+        c.setDetectedThisSweep(true);
     }
 
     private void predictContacts(double deltaSeconds){
@@ -226,6 +215,44 @@ public class Radar extends Component {
             pos.y += vel.y * deltaSeconds;
             pos.z += vel.z * deltaSeconds;
         }
+    }
+
+    public void removeExpiredContacts(){
+        Iterator<RadarContact> it = contacts.values().iterator();
+        long now = System.currentTimeMillis();
+
+        while(it.hasNext()){
+
+            RadarContact c = it.next();
+
+            if(now - c.getLastDetectionTime() > contactTimeout){
+                it.remove();
+            }
+        }
+    }
+
+    private void decreaseConfidence() {
+
+        Iterator<RadarContact> it = contacts.values().iterator();
+
+        while (it.hasNext()) {
+
+            RadarContact c = it.next();
+
+            if (!c.wasDetectedThisSweep()) {
+                c.decreaseConfidence();
+            }
+
+            c.setDetectedThisSweep(false);
+
+            if (c.getConfidence() <= 0) {
+                it.remove();
+            }
+        }
+    }
+
+    public void onSweepFinished(){
+        decreaseConfidence();
     }
 
 }

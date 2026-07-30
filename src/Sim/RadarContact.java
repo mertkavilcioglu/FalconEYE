@@ -12,10 +12,11 @@ public class RadarContact {
     private Vec3 predictedPos;
     private Velocity predictedVel;
 
-    private int confidence; //TODO: tarama olunca arttır dönüş yoksa azalt
+    private int confidence;
     private long lastDetectionTime;
     private DisplayState displayState;
 
+    private boolean detectedThisSweep;
 
 
     public enum DisplayState {
@@ -40,6 +41,8 @@ public class RadarContact {
 
         confidence = 1;
         displayState = DisplayState.CONTACT;
+        lastDetectionTime = System.currentTimeMillis();
+        detectedThisSweep = true;
     }
 
     public void setMeasuredPos(Vec3 measuredPos){
@@ -63,17 +66,22 @@ public class RadarContact {
     }
 
     public void increaseConfidence(){
-        confidence++;
-
-        if(confidence < 5){
+        confidence+=2;
+        if(confidence < 10){
             displayState = DisplayState.CONTACT;
         }
-        else if(confidence < 10){
+        else if(displayState == DisplayState.CONTACT){
             displayState = DisplayState.TRACK;
         }
-        else{
+        else if(displayState == DisplayState.TRACK && confidence >= 20){
             displayState = DisplayState.IDENTIFIED;
         }
+
+    }
+
+    public void decreaseConfidence(){
+        if (confidence > 0)
+            confidence--;
     }
 
     public int getTargetID(){
@@ -102,5 +110,17 @@ public class RadarContact {
 
     public DisplayState getDisplayState(){
         return displayState;
+    }
+
+    public long getLastDetectionTime() {
+        return lastDetectionTime;
+    }
+
+    public boolean wasDetectedThisSweep() {
+        return detectedThisSweep;
+    }
+
+    public void setDetectedThisSweep(boolean detectedThisSweep) {
+        this.detectedThisSweep = detectedThisSweep;
     }
 }
