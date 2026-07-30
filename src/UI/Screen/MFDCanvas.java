@@ -49,16 +49,19 @@ public class MFDCanvas extends JPanel {
         int screenX = (int)(centerX + relativePos.x * scale);
         int screenY = (int)(bottomY - relativePos.y * scale);
 
-        //TODO: RADARDAN GELEN DATAYA GÖRE RADAR BUNLARDAN BİRİNİ ÇİZDİRECECK,
-        // TODO: FONKSİYON RADAR REQUESET PARAMETRESİ ALABİLİR BELKİ
-
-        //test cases
-        //drawContact(g2, screenX, screenY, radius);
-        //drawTrack(g2, e.getComponent(Velocity.class), screenX,screenY,radius);
-        drawIdentified(g2,
-                contact.getPredictedVel(),
-                world.getEntities().get(contact.getTargetID()).getIff(),
-                screenX, screenY, radius);
+        RadarContact.DisplayState displayState = contact.getDisplayState();
+        if(displayState == RadarContact.DisplayState.CONTACT){
+            drawContact(g2,screenX, screenY, radius);
+        }
+        else if(displayState == RadarContact.DisplayState.TRACK){
+            drawTrack(g2, contact.getPredictedVel(), screenX,screenY,radius);
+        }
+        else if(displayState == RadarContact.DisplayState.IDENTIFIED){
+            drawIdentified(g2,
+                    contact.getPredictedVel(),
+                    world.getEntities().get(contact.getTargetID()).getIff(),
+                    screenX, screenY, radius);
+        }
     }
 
 

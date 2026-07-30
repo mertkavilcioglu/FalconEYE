@@ -64,6 +64,16 @@ public class RadarContact {
 
     public void increaseConfidence(){
         confidence++;
+
+        if(confidence < 5){
+            displayState = DisplayState.CONTACT;
+        }
+        else if(confidence < 10){
+            displayState = DisplayState.TRACK;
+        }
+        else{
+            displayState = DisplayState.IDENTIFIED;
+        }
     }
 
     public int getTargetID(){
@@ -84,5 +94,13 @@ public class RadarContact {
 
     public Velocity getPredictedVel(){
         return predictedVel;
+    }
+
+    public int getConfidence(){
+        return confidence;
+    }
+
+    public DisplayState getDisplayState(){
+        return displayState;
     }
 }
