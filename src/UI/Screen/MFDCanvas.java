@@ -40,11 +40,16 @@ public class MFDCanvas extends JPanel {
 
     private void drawEntities(Graphics2D g2) {
 
+        Shape oldClip = g2.getClip();
+        g2.setClip(getRadarDisplayArea());
+
         for (RadarContact c : world.player.getComponent(Radar.class).getContacts().values()) {
+
             if (c.getTargetID() == world.player.getId())
                 continue;
             drawEntity(g2, c);
         }
+        g2.setClip(oldClip);
     }
 
     private void drawEntity(Graphics2D g2, RadarContact contact) {  // TODO: relative pos hesaplaması canvasın işi değil
