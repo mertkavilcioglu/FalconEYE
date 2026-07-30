@@ -25,6 +25,10 @@ public class Radar extends Component {
 
     private long contactTimeout = 5000; // ms
 
+    private int bars = 4;
+    private int currentBar = 0;
+    private boolean movingUp = true;
+
     public Radar(){
 
     }
@@ -253,6 +257,31 @@ public class Radar extends Component {
 
     public void onSweepFinished(){
         decreaseConfidence();
+        nextBar();
+    }
+
+    private void updatePitch(){
+        pitch = (-elevation / 2) + currentBar * (elevation / (bars - 1));
+    }
+
+    private void nextBar(){
+        if (movingUp) {
+            currentBar++;
+
+            if (currentBar >= bars - 1) {
+                currentBar = bars - 1;
+                movingUp = false;
+            }
+        }
+        else {
+            currentBar--;
+
+            if (currentBar <= 0) {
+                currentBar = 0;
+                movingUp = true;
+            }
+        }
+        updatePitch();
     }
 
 }
