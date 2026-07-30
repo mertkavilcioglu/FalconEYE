@@ -18,6 +18,12 @@ public class MFDCanvas extends JPanel {
     private double scale;
     private int overlayThickness = 0;
 
+    private double contactLeftMargin = 0.12;
+    private double contactRightMargin = 0.12;
+    private double contactTopMargin = 0.10;
+    private double contactBottomMargin = 0.14;
+
+
     public MFDCanvas(World world){
         this.world = world;
         setOpaque(false);
@@ -170,7 +176,7 @@ public class MFDCanvas extends JPanel {
         int w = getWidth();
         int h = getHeight();
 
-        int baseY = (int)(h * 0.92);
+        int baseY = (int)(h * 0.9);
 
         g2.setColor(Color.CYAN);
 
@@ -213,8 +219,8 @@ public class MFDCanvas extends JPanel {
         int stem = h / 42;
         int top = w / 130;
 
-        double fullLeft = -overlayThickness + top + 2;
-        double fullRight = w + overlayThickness - top - 2;
+        double fullLeft = -overlayThickness + top*10;
+        double fullRight = w + overlayThickness - top*10;
 
         double canvasLeft = w * 0.15;
         double canvasRight = w * 0.85;
@@ -230,9 +236,7 @@ public class MFDCanvas extends JPanel {
         } else {
 
             double ratio = radar.getAzimuth() / 60.0;
-
             double width = (canvasRight - canvasLeft) * ratio;
-
             double center = (canvasLeft + canvasRight) / 2.0;
 
             left = center - width / 2.0;
@@ -242,7 +246,7 @@ public class MFDCanvas extends JPanel {
         double normalized = (radar.getBeamOffset() + radar.getAzimuth() / 2.0) / radar.getAzimuth();
 
         int x = (int)(left + normalized * (right - left));
-        int y = (int)(h * 0.97);
+        int y = (int)(h * 0.94);
 
         g2.setColor(Color.CYAN);
 
@@ -251,9 +255,7 @@ public class MFDCanvas extends JPanel {
 
         int bottomTrim = stem / 4;
         g2.drawLine(x, y - bottomTrim, x, y - stem);
-
         g2.drawLine(x - top, y - stem, x + top, y - stem);
-
         g2.setStroke(oldStroke);
     }
 
@@ -262,7 +264,7 @@ public class MFDCanvas extends JPanel {
         int w = getWidth();
         int h = getHeight();
 
-        int x = (int)(w * 0.07);
+        int x = (int)(w * 0.1);
 
         int lineCount = 7;
 
@@ -272,14 +274,12 @@ public class MFDCanvas extends JPanel {
         double step = (double)(bottom - top) / (lineCount - 1);
 
         g2.setColor(Color.CYAN);
-
         Stroke oldStroke = g2.getStroke();
         g2.setStroke(new BasicStroke(1.5f));
 
         for (int i = 0; i < lineCount; i++) {
 
             int y = (int)(top + i * step);
-
             int lineLength = (i == lineCount / 2) ? (int)(w / 40.0 * 1.5) : (w / 40);
 
             g2.drawLine(x, y, x + lineLength, y);
@@ -290,8 +290,7 @@ public class MFDCanvas extends JPanel {
         int spacing = (int)step;
 
         g2.setStroke(oldStroke);
-
-        drawBarIndicator(g2, radar, x-w/50, centerY, spacing);
+        drawBarIndicator(g2, radar, x-w/70, centerY, spacing);
 
     }
 
@@ -313,15 +312,14 @@ public class MFDCanvas extends JPanel {
         int len = getWidth() / 60;
 
         g2.setColor(Color.CYAN);
-
         Stroke oldStroke = g2.getStroke();
         g2.setStroke(new BasicStroke(4f));
 
         g2.drawLine(x - len, y, x, y);
         g2.drawLine(x, y - len / 2, x, y + len / 2);
-
         g2.setStroke(oldStroke);
     }
+    
 
     public void setOverlayThickness(int overlayThickness){
         this.overlayThickness = overlayThickness;

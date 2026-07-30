@@ -9,45 +9,57 @@ import java.awt.event.ComponentEvent;
 
 public class MFDScreen extends JPanel {
 
-    private TopOverlayPanel overlayNorth = new TopOverlayPanel();
-    private BottomOverlayPanel overlaySouth = new BottomOverlayPanel();
-    private RightOverlayPanel overlayEast = new RightOverlayPanel();
-    private LeftOverlayPanel overlayWest = new LeftOverlayPanel();
+    private final TopOverlayPanel overlayNorth = new TopOverlayPanel();
+    private final BottomOverlayPanel overlaySouth = new BottomOverlayPanel();
+    private final LeftOverlayPanel overlayWest = new LeftOverlayPanel();
+    private final RightOverlayPanel overlayEast = new RightOverlayPanel();
+
+    private final MFDCanvas mfdCanvas;
     private int overlayThickness = 0;
-    private MFDCanvas mfdCanvas;
 
-    public MFDScreen(EYEApp app){
-        mfdCanvas = new MFDCanvas(app.getWorld());
+    public MFDScreen(EYEApp app) {
+
+        setLayout(null);
         setBackground(Color.BLACK);
-        setLayout(new BorderLayout());
-        add(overlayNorth, BorderLayout.NORTH);
-        add(overlaySouth, BorderLayout.SOUTH);
-        add(overlayEast, BorderLayout.EAST);
-        add(overlayWest, BorderLayout.WEST);
-        add(mfdCanvas, BorderLayout.CENTER);
 
+        mfdCanvas = new MFDCanvas(app.getWorld());
+
+        add(mfdCanvas);
+        add(overlayNorth);
+        add(overlaySouth);
+        add(overlayWest);
+        add(overlayEast);
 
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
+
                 overlayThickness = (int)(getWidth() * 0.08);
-                overlayNorth.setPreferredSize(new Dimension(0, overlayThickness));
-                overlaySouth.setPreferredSize(new Dimension(0, overlayThickness));
-                overlayEast.setPreferredSize(new Dimension(overlayThickness, 0));
-                overlayWest.setPreferredSize(new Dimension(overlayThickness, 0));
+                layoutChildren();
                 mfdCanvas.setOverlayThickness(overlayThickness);
-                revalidate();
                 repaint();
             }
         });
-
     }
 
-    public int getOverlayThickness(){
+    private void layoutChildren() {
+
+        int w = getWidth();
+        int h = getHeight();
+
+        mfdCanvas.setBounds(0, 0, w, h);
+
+        overlayNorth.setBounds(overlayThickness, 0, w - overlayThickness * 2, overlayThickness);
+        overlaySouth.setBounds(overlayThickness, h - overlayThickness, w - overlayThickness * 2, overlayThickness);
+        overlayWest.setBounds(0, overlayThickness, overlayThickness, h - overlayThickness * 2);
+        overlayEast.setBounds(w - overlayThickness, overlayThickness, overlayThickness, h - overlayThickness * 2);
+    }
+
+    public int getOverlayThickness() {
         return overlayThickness;
     }
 
-    public MFDCanvas getMfdCanvas(){
+    public MFDCanvas getMfdCanvas() {
         return mfdCanvas;
     }
 }
