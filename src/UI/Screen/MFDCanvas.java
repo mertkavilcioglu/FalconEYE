@@ -52,8 +52,11 @@ public class MFDCanvas extends JPanel {
         Vec3 playerPos = world.player.getComponent(Transform.class).position;
         Vec3 relativePos = new Vec3(targetPos.x-playerPos.x, targetPos.y-playerPos.y, targetPos.z-playerPos.z);
 
-        int centerX = getWidth() / 2;
-        int bottomY = getHeight();
+        Rectangle displayArea = getRadarDisplayArea();
+
+        int centerX = displayArea.x + displayArea.width / 2;
+        int bottomY = displayArea.y + displayArea.height;
+
         int screenX = (int)(centerX + relativePos.x * scale);
         int screenY = (int)(bottomY - relativePos.y * scale);
 
@@ -154,7 +157,8 @@ public class MFDCanvas extends JPanel {
     }
 
     public void defineScale(int rangeMeters){
-        scale = (double) getHeight() / rangeMeters;
+        Rectangle displayArea = getRadarDisplayArea();
+        scale = (double)displayArea.height / rangeMeters;
     }
 
     private double getHeading(Velocity vel) {
@@ -319,7 +323,22 @@ public class MFDCanvas extends JPanel {
         g2.drawLine(x, y - len / 2, x, y + len / 2);
         g2.setStroke(oldStroke);
     }
-    
+
+    private Rectangle getRadarDisplayArea() {
+
+        int left = overlayThickness + 18;
+        int top = overlayThickness + 12;
+
+        int right = getWidth() - overlayThickness - 18;
+        int bottom = getHeight() - overlayThickness - 22;
+
+        return new Rectangle(
+                left,
+                top,
+                right - left,
+                bottom - top
+        );
+    }
 
     public void setOverlayThickness(int overlayThickness){
         this.overlayThickness = overlayThickness;
