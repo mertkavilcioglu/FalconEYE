@@ -40,7 +40,7 @@ public class MFDCanvas extends JPanel {
     }
 
     private void drawEntity(Graphics2D g2, RadarContact contact) {  // TODO: relative pos hesaplaması canvasın işi değil
-        Vec3 targetPos = contact.getTargetPos();
+        Vec3 targetPos = contact.getPredictedPos();
         Vec3 playerPos = world.player.getComponent(Transform.class).position;
         Vec3 relativePos = new Vec3(targetPos.x-playerPos.x, targetPos.y-playerPos.y, targetPos.z-playerPos.z);
 
@@ -55,16 +55,12 @@ public class MFDCanvas extends JPanel {
         //test cases
         //drawContact(g2, screenX, screenY, radius);
         //drawTrack(g2, e.getComponent(Velocity.class), screenX,screenY,radius);
-        drawIdentified(g2, contact.getTargetVel(),world.getEntities().get(contact.getTargetID()).getIff(), screenX,screenY,radius);
+        drawIdentified(g2,
+                contact.getPredictedVel(),
+                world.getEntities().get(contact.getTargetID()).getIff(),
+                screenX, screenY, radius);
     }
 
-
-
-    private void drawDot(Graphics g, int centerX, int centerY, int radius) {
-        g.fillOval(centerX - radius / 2, centerY - radius / 2, radius, radius);
-    }
-
-    //TODO: DOST ise -> contact - iff ******* düşman ise contact - track - iff
 
     private void drawContact(Graphics2D g2, int centerX, int centerY, int radius) {
         g2.setColor(Color.LIGHT_GRAY);

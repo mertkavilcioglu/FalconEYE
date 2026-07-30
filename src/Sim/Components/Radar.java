@@ -19,7 +19,7 @@ public class Radar extends Component {
 
     private double beamWidth = 2.0;
     private double beamOffset = -30.0;
-    private double beamSpeed = 120.0;
+    private double beamSpeed = 60.0;
     private boolean sweepingRight = true;
 
     public Radar(){
@@ -31,6 +31,7 @@ public class Radar extends Component {
        // System.out.println("RADAR");
         double deltaSeconds = deltaTime / 1000.0;
         updateBeam(deltaSeconds);
+        predictContacts(deltaSeconds);
         scan();
     }
 
@@ -88,7 +89,7 @@ public class Radar extends Component {
                 createContact(e);
             }
             else{
-                updateContact(contact, e);
+                updateContact(e);
             }
         }
     }
@@ -184,8 +185,47 @@ public class Radar extends Component {
     }
 
 
-    private void updateContact(RadarContact c, Entity e){
+    private void updateContact(Entity e) {
 
+        RadarContact c = contacts.get(e.getId());
+
+        Transform transform = e.getComponent(Transform.class);
+        Velocity velocity = e.getComponent(Velocity.class);
+
+        c.setMeasuredPos(new Vec3(
+                transform.position.x,
+                transform.position.y,
+                transform.position.z));
+
+        c.setMeasuredVel(new Velocity(
+                velocity.getVelocity().x,
+                velocity.getVelocity().y,
+                velocity.getVelocity().z));
+
+        c.setPredictedPos(new Vec3(
+                transform.position.x,
+                transform.position.y,
+                transform.position.z));
+
+        c.setPredictedVel(new Velocity(
+                velocity.getVelocity().x,
+                velocity.getVelocity().y,
+                velocity.getVelocity().z));
+
+        c.setLastDetectionTime(System.currentTimeMillis());
+
+        c.increaseConfidence();
+    }
+
+    private void predictContacts(double deltaSeconds){
+        for (RadarContact c : contacts.values()) {
+            Vec3 pos = c.getPredictedPos();
+            Vec3 vel = c.getPredictedVel().getVelocity();
+
+            pos.x += vel.x * deltaSeconds;
+            pos.y += vel.y * deltaSeconds;
+            pos.z += vel.z * deltaSeconds;
+        }
     }
 
 }
