@@ -180,6 +180,9 @@ public class MFDCanvas extends JPanel {
         double right = w * 0.82;
         double width = right - left;
 
+        Stroke oldStroke = g2.getStroke();
+        g2.setStroke(new BasicStroke(1.5f));
+
         for (int i = 0; i < tickCount; i++) {
 
             double t;
@@ -198,6 +201,8 @@ public class MFDCanvas extends JPanel {
 
             g2.drawLine(x, baseY, x, baseY - tickLength);
         }
+
+        g2.setStroke(oldStroke);
     }
 
     private void drawBeamIndicator(Graphics2D g2, Radar radar){
@@ -205,8 +210,8 @@ public class MFDCanvas extends JPanel {
         int w = getWidth();
         int h = getHeight();
 
-        int stem = h / 30;
-        int top = w / 80;
+        int stem = h / 42;
+        int top = w / 130;
 
         double fullLeft = -overlayThickness + top + 2;
         double fullRight = w + overlayThickness - top - 2;
@@ -234,18 +239,22 @@ public class MFDCanvas extends JPanel {
             right = center + width / 2.0;
         }
 
-        double normalized =
-                (radar.getBeamOffset() + radar.getAzimuth() / 2.0)
-                        / radar.getAzimuth();
+        double normalized = (radar.getBeamOffset() + radar.getAzimuth() / 2.0) / radar.getAzimuth();
 
         int x = (int)(left + normalized * (right - left));
-
         int y = (int)(h * 0.97);
 
         g2.setColor(Color.CYAN);
 
-        g2.drawLine(x, y, x, y - stem);
+        Stroke oldStroke = g2.getStroke();
+        g2.setStroke(new BasicStroke(4f));
+
+        int bottomTrim = stem / 4;
+        g2.drawLine(x, y - bottomTrim, x, y - stem);
+
         g2.drawLine(x - top, y - stem, x + top, y - stem);
+
+        g2.setStroke(oldStroke);
     }
 
     private void drawBarScale(Graphics2D g2, Radar radar){
@@ -264,34 +273,32 @@ public class MFDCanvas extends JPanel {
 
         g2.setColor(Color.CYAN);
 
+        Stroke oldStroke = g2.getStroke();
+        g2.setStroke(new BasicStroke(1.5f));
+
         for (int i = 0; i < lineCount; i++) {
 
             int y = (int)(top + i * step);
 
-            int lineLength = (i == lineCount / 2)
-                    ? (int)(w / 40.0 * 1.5)
-                    : (w / 40);
+            int lineLength = (i == lineCount / 2) ? (int)(w / 40.0 * 1.5) : (w / 40);
 
             g2.drawLine(x, y, x + lineLength, y);
-
             g2.drawLine(x, y, x + lineLength, y);
         }
 
         int centerY = (top + bottom) / 2;
         int spacing = (int)step;
 
+        g2.setStroke(oldStroke);
+
         drawBarIndicator(g2, radar, x-w/50, centerY, spacing);
+
     }
 
-    private void drawBarIndicator(Graphics2D g2,
-                                  Radar radar,
-                                  int x,
-                                  int centerY,
-                                  int spacing){
+    private void drawBarIndicator(Graphics2D g2, Radar radar, int x, int centerY, int spacing){
 
         int bars = radar.getBars();
         int currentBar = radar.getCurrentBar();
-
         double offset;
 
         if (bars == 1) {
@@ -303,13 +310,17 @@ public class MFDCanvas extends JPanel {
         double movementScale = 0.25;
 
         int y = (int)(centerY + offset * spacing * movementScale);
-
         int len = getWidth() / 60;
 
         g2.setColor(Color.CYAN);
 
+        Stroke oldStroke = g2.getStroke();
+        g2.setStroke(new BasicStroke(4f));
+
         g2.drawLine(x - len, y, x, y);
         g2.drawLine(x, y - len / 2, x, y + len / 2);
+
+        g2.setStroke(oldStroke);
     }
 
     public void setOverlayThickness(int overlayThickness){
