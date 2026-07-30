@@ -13,6 +13,7 @@ public class MFDScreen extends JPanel {
     private BottomOverlayPanel overlaySouth = new BottomOverlayPanel();
     private RightOverlayPanel overlayEast = new RightOverlayPanel();
     private LeftOverlayPanel overlayWest = new LeftOverlayPanel();
+    private int overlayThickness = 0;
     private MFDCanvas mfdCanvas;
 
     public MFDScreen(EYEApp app){
@@ -29,16 +30,21 @@ public class MFDScreen extends JPanel {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                int thickness = (int)(getWidth() * 0.08);
-                overlayNorth.setPreferredSize(new Dimension(0, thickness));
-                overlaySouth.setPreferredSize(new Dimension(0, thickness));
-                overlayEast.setPreferredSize(new Dimension(thickness, 0));
-                overlayWest.setPreferredSize(new Dimension(thickness, 0));
+                overlayThickness = (int)(getWidth() * 0.08);
+                overlayNorth.setPreferredSize(new Dimension(0, overlayThickness));
+                overlaySouth.setPreferredSize(new Dimension(0, overlayThickness));
+                overlayEast.setPreferredSize(new Dimension(overlayThickness, 0));
+                overlayWest.setPreferredSize(new Dimension(overlayThickness, 0));
+                mfdCanvas.setOverlayThickness(overlayThickness);
                 revalidate();
                 repaint();
             }
         });
 
+    }
+
+    public int getOverlayThickness(){
+        return overlayThickness;
     }
 
     public MFDCanvas getMfdCanvas(){

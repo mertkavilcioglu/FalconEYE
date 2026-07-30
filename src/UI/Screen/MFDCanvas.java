@@ -16,6 +16,7 @@ public class MFDCanvas extends JPanel {
     private World world;
     private int radius = 24;
     private double scale;
+    private int overlayThickness = 0;
 
     public MFDCanvas(World world){
         this.world = world;
@@ -169,19 +170,33 @@ public class MFDCanvas extends JPanel {
         int w = getWidth();
         int h = getHeight();
 
-        int baseY = (int)(h * 0.97);
+        int baseY = (int)(h * 0.92);
 
-        g2.setColor(Color.DARK_GRAY);
+        g2.setColor(Color.CYAN);
 
-        int tickCount = 12;
+        int tickCount = 7;
 
-        for(int i=0;i<=tickCount;i++){
+        double left = w * 0.18;
+        double right = w * 0.82;
+        double width = right - left;
 
-            double t = (double)i / tickCount;
+        for (int i = 0; i < tickCount; i++) {
 
-            int x = (int)(w * 0.15 + t * w * 0.70);
+            double t;
 
-            g2.drawLine(x, baseY, x, baseY - h/40);
+            if (tickCount == 1)
+                t = 0.5;
+            else
+                t = (double) i / (tickCount - 1);
+
+            int x = (int)(left + t * width);
+
+            int tickLength = h / 40;
+
+            if (i == tickCount / 2)
+                tickLength = (int)(tickLength * 1.5);
+
+            g2.drawLine(x, baseY, x, baseY - tickLength);
         }
     }
 
@@ -190,18 +205,47 @@ public class MFDCanvas extends JPanel {
         int w = getWidth();
         int h = getHeight();
 
-        double normalized = (radar.getBeamOffset() + radar.getAzimuth()/2.0) / radar.getAzimuth();
+        int stem = h / 30;
+        int top = w / 80;
 
-        int x = (int)(w * 0.15 + normalized * w * 0.70);
+        double fullLeft = -overlayThickness + top + 2;
+        double fullRight = w + overlayThickness - top - 2;
+
+        double canvasLeft = w * 0.15;
+        double canvasRight = w * 0.85;
+
+        double left;
+        double right;
+
+        if (radar.getAzimuth() >= 120) {
+
+            left = fullLeft;
+            right = fullRight;
+
+        } else {
+
+            double ratio = radar.getAzimuth() / 60.0;
+
+            double width = (canvasRight - canvasLeft) * ratio;
+
+            double center = (canvasLeft + canvasRight) / 2.0;
+
+            left = center - width / 2.0;
+            right = center + width / 2.0;
+        }
+
+        double normalized =
+                (radar.getBeamOffset() + radar.getAzimuth() / 2.0)
+                        / radar.getAzimuth();
+
+        int x = (int)(left + normalized * (right - left));
+
         int y = (int)(h * 0.97);
 
-        int stem = h/30;
-        int top = w/80;
+        g2.setColor(Color.CYAN);
 
-        g2.setColor(Color.GREEN);
-
-        g2.drawLine(x, y, x, y-stem);
-        g2.drawLine(x-top, y-stem, x+top, y-stem);
+        g2.drawLine(x, y, x, y - stem);
+        g2.drawLine(x - top, y - stem, x + top, y - stem);
     }
 
     private void drawBarScale(Graphics2D g2, Radar radar){
@@ -209,48 +253,66 @@ public class MFDCanvas extends JPanel {
         int w = getWidth();
         int h = getHeight();
 
-        int bars = radar.getBars();
-        int x = (int)(w*0.05);
+        int x = (int)(w * 0.07);
 
-        int top = (int)(h*0.20);
-        int bottom = (int)(h*0.80);
+        int lineCount = 7;
 
-        g2.setColor(Color.DARK_GRAY);
+        int top = (int)(h * 0.18);
+        int bottom = (int)(h * 0.82);
 
-        for(int i=0;i<bars;i++){
-            double t;
-            if(bars==1)
-                t=0.5;
-            else
-                t=(double)i/(bars-1);
+        double step = (double)(bottom - top) / (lineCount - 1);
 
-            int y=(int)(top+t*(bottom-top));
-            g2.drawLine(x, y, x+w/40, y);
+        g2.setColor(Color.CYAN);
+
+        for (int i = 0; i < lineCount; i++) {
+
+            int y = (int)(top + i * step);
+
+            int lineLength = (i == lineCount / 2)
+                    ? (int)(w / 40.0 * 1.5)
+                    : (w / 40);
+
+            g2.drawLine(x, y, x + lineLength, y);
+
+            g2.drawLine(x, y, x + lineLength, y);
         }
 
-        drawBarIndicator(g2, radar, x, top, bottom);
+        int centerY = (top + bottom) / 2;
+        int spacing = (int)step;
+
+        drawBarIndicator(g2, radar, x-w/50, centerY, spacing);
     }
 
-    private void drawBarIndicator(Graphics2D g2, Radar radar, int x, int top, int bottom){
+    private void drawBarIndicator(Graphics2D g2,
+                                  Radar radar,
+                                  int x,
+                                  int centerY,
+                                  int spacing){
 
         int bars = radar.getBars();
         int currentBar = radar.getCurrentBar();
 
-        double normalized;
+        double offset;
 
         if (bars == 1) {
-            normalized = 0.5;
+            offset = 0;
         } else {
-            normalized = (double) currentBar / (bars - 1);
+            offset = currentBar - (bars - 1) / 2.0;
         }
 
-        int y = (int)(top + normalized * (bottom - top));
+        double movementScale = 0.25;
+
+        int y = (int)(centerY + offset * spacing * movementScale);
 
         int len = getWidth() / 60;
 
-        g2.setColor(Color.GREEN);
+        g2.setColor(Color.CYAN);
 
         g2.drawLine(x - len, y, x, y);
         g2.drawLine(x, y - len / 2, x, y + len / 2);
+    }
+
+    public void setOverlayThickness(int overlayThickness){
+        this.overlayThickness = overlayThickness;
     }
 }

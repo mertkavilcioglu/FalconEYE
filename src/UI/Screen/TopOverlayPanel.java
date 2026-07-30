@@ -16,6 +16,7 @@ public class TopOverlayPanel extends JPanel {
                 continue;
             }
             JLabel text = new JLabel("section " + (i));
+            text.setOpaque(false);
             text.setHorizontalAlignment(SwingConstants.CENTER);
             text.setForeground(Color.WHITE);
             add(text);
