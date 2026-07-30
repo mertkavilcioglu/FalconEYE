@@ -27,6 +27,7 @@ public class MFDCanvas extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         defineScale(world.player.getComponent(Radar.class).getRange());
+        drawRadarDebug(g2);
         drawEntities(g2);
     }
 
@@ -152,5 +153,104 @@ public class MFDCanvas extends JPanel {
     private double getHeading(Velocity vel) {
         double heading = Math.toDegrees(Math.atan2(vel.getVelocity().x, vel.getVelocity().y));
         return heading < 0 ? heading + 360 : heading;
+    }
+
+    private void drawRadarDebug(Graphics2D g2){
+        Radar radar = world.player.getComponent(Radar.class);
+
+
+        drawAzimuthScale(g2, radar);
+        drawBarScale(g2, radar);
+        drawBeamIndicator(g2, radar);
+    }
+
+
+    private void drawAzimuthScale(Graphics2D g2, Radar radar){
+        int w = getWidth();
+        int h = getHeight();
+
+        int baseY = (int)(h * 0.97);
+
+        g2.setColor(Color.DARK_GRAY);
+
+        int tickCount = 12;
+
+        for(int i=0;i<=tickCount;i++){
+
+            double t = (double)i / tickCount;
+
+            int x = (int)(w * 0.15 + t * w * 0.70);
+
+            g2.drawLine(x, baseY, x, baseY - h/40);
+        }
+    }
+
+    private void drawBeamIndicator(Graphics2D g2, Radar radar){
+
+        int w = getWidth();
+        int h = getHeight();
+
+        double normalized = (radar.getBeamOffset() + radar.getAzimuth()/2.0) / radar.getAzimuth();
+
+        int x = (int)(w * 0.15 + normalized * w * 0.70);
+        int y = (int)(h * 0.97);
+
+        int stem = h/30;
+        int top = w/80;
+
+        g2.setColor(Color.GREEN);
+
+        g2.drawLine(x, y, x, y-stem);
+        g2.drawLine(x-top, y-stem, x+top, y-stem);
+    }
+
+    private void drawBarScale(Graphics2D g2, Radar radar){
+
+        int w = getWidth();
+        int h = getHeight();
+
+        int bars = radar.getBars();
+        int x = (int)(w*0.05);
+
+        int top = (int)(h*0.20);
+        int bottom = (int)(h*0.80);
+
+        g2.setColor(Color.DARK_GRAY);
+
+        for(int i=0;i<bars;i++){
+            double t;
+            if(bars==1)
+                t=0.5;
+            else
+                t=(double)i/(bars-1);
+
+            int y=(int)(top+t*(bottom-top));
+            g2.drawLine(x, y, x+w/40, y);
+        }
+
+        drawBarIndicator(g2, radar, x, top, bottom);
+    }
+
+    private void drawBarIndicator(Graphics2D g2, Radar radar, int x, int top, int bottom){
+
+        int bars = radar.getBars();
+        int currentBar = radar.getCurrentBar();
+
+        double normalized;
+
+        if (bars == 1) {
+            normalized = 0.5;
+        } else {
+            normalized = (double) currentBar / (bars - 1);
+        }
+
+        int y = (int)(top + normalized * (bottom - top));
+
+        int len = getWidth() / 60;
+
+        g2.setColor(Color.GREEN);
+
+        g2.drawLine(x - len, y, x, y);
+        g2.drawLine(x, y - len / 2, x, y + len / 2);
     }
 }

@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 public class Radar extends Component {
     private int range = 74080; // 40NM
-    private double azimuth = 60;
+    private double azimuth = 120;
     private double elevation = 4;
 
     private double heading = 0; // horizontal for azimuth
@@ -282,6 +282,22 @@ public class Radar extends Component {
             }
         }
         updatePitch();
+    }
+
+    public double getBeamOffset(){
+        return beamOffset;
+    }
+    public double getPitch(){
+        return pitch;
+    }
+    public int getCurrentBar(){
+        return currentBar;
+    }
+    public int getBars(){
+        return bars;
+    }
+    public double getElevation(){
+        return elevation;
     }
 
 }
