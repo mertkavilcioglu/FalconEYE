@@ -19,7 +19,7 @@ public class World {
 
     public static final double START_ALTITUDE = 3048.0; // 10.000 feet
     public static final double WORLD_ORIGIN = 100000.0;
-    public Entity player;
+    private Entity player;
 
 
     public World(EYEApp app){
@@ -79,6 +79,10 @@ public class World {
 
     public HashMap<Integer, Entity> getEntities() {
         return entities;
+    }
+
+    public Entity getPlayer(){
+        return player;
     }
 
 

@@ -21,7 +21,7 @@ public class MFDView extends JPanel {
     public MFDView(EYEApp app){
         setLayout(new BorderLayout());
         radarScreen = new MFDScreen(app);
-        leftOSBs = new LeftOSBPanel(150, 0, new int[]{20,19,18,17,16}, app.getWorld().player.getComponent(Radar.class),radarScreen);
+        leftOSBs = new LeftOSBPanel(150, 0, new int[]{20,19,18,17,16}, app.getWorld().getPlayer().getComponent(Radar.class),radarScreen);
 
         add(topOSBs, BorderLayout.NORTH);
         add(botOSBs, BorderLayout.SOUTH);

@@ -35,11 +35,11 @@ public class MFDCanvas extends JPanel {
 
         Graphics2D g2 = (Graphics2D) g;
 
-        defineScale(world.player.getComponent(Radar.class).getRange());
+        defineScale(world.getPlayer().getComponent(Radar.class).getRange());
 
         drawRadarDebug(g2);
         drawRollReference(g2);
-        drawAzimuthRangeLines(g2, world.player.getComponent(Radar.class));
+        drawAzimuthRangeLines(g2, world.getPlayer().getComponent(Radar.class));
         drawEntities(g2);
     }
 
@@ -48,9 +48,9 @@ public class MFDCanvas extends JPanel {
         Shape oldClip = g2.getClip();
         g2.setClip(getRadarDisplayArea());
 
-        for (RadarContact c : world.player.getComponent(Radar.class).getContacts().values()) {
+        for (RadarContact c : world.getPlayer().getComponent(Radar.class).getContacts().values()) {
 
-            if (c.getTargetID() == world.player.getId())
+            if (c.getTargetID() == world.getPlayer().getId())
                 continue;
             drawEntity(g2, c);
         }
@@ -59,7 +59,7 @@ public class MFDCanvas extends JPanel {
 
     private void drawEntity(Graphics2D g2, RadarContact contact) {  // TODO: relative pos hesaplaması canvasın işi değil
         Vec3 targetPos = contact.getPredictedPos();
-        Vec3 playerPos = world.player.getComponent(Transform.class).position;
+        Vec3 playerPos = world.getPlayer().getComponent(Transform.class).position;
         Vec3 relativePos = new Vec3(targetPos.x-playerPos.x, targetPos.y-playerPos.y, targetPos.z-playerPos.z);
 
         Rectangle displayArea = getRadarDisplayArea();
@@ -177,7 +177,7 @@ public class MFDCanvas extends JPanel {
     }
 
     private void drawRadarDebug(Graphics2D g2){
-        Radar radar = world.player.getComponent(Radar.class);
+        Radar radar = world.getPlayer().getComponent(Radar.class);
 
 
         drawAzimuthScale(g2, radar);

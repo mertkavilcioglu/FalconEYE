@@ -6,7 +6,7 @@ import java.awt.*;
 public class AppWindow extends JFrame {
     private EYEApp app;
     private HierarchyView hierarchyView;
-    private UnnamedRightPanel unnamedRightPanel;
+    private TargetControlPanel targetControlPanel;
     private MFDView mfdView;
 
 
@@ -16,7 +16,7 @@ public class AppWindow extends JFrame {
         //setSize(1600, 900);
 
         hierarchyView = new HierarchyView();
-        unnamedRightPanel = new UnnamedRightPanel();
+        targetControlPanel = new TargetControlPanel();
         mfdView = new MFDView(app);
 
 
@@ -27,8 +27,10 @@ public class AppWindow extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         add(hierarchyView, BorderLayout.WEST);
-        add(unnamedRightPanel, BorderLayout.EAST);
+        add(targetControlPanel, BorderLayout.EAST);
         add(mfdView, BorderLayout.CENTER);
+
+        new Timer(250, e -> hierarchyView.rebuild(app.getWorld())).start();
     }
 
     public MFDView getMfdView(){

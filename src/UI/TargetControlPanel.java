@@ -1,0 +1,140 @@
+package UI;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+
+public class TargetControlPanel extends JPanel {
+
+    private SpawnColumnPanel friendlyPanel;
+    private SpawnColumnPanel enemyPanel;
+
+    public TargetControlPanel() {
+
+        setBackground(Color.DARK_GRAY);
+
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = (int) (screen.width * 0.21875);
+        setPreferredSize(new Dimension(width, 0));
+
+        setLayout(new BorderLayout());
+
+        JPanel topContainer = new JPanel();
+        topContainer.setOpaque(false);
+        topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
+        topContainer.setBorder(new EmptyBorder(20, 20, 20, 20));
+
+        //---------------------------------------
+        // TITLE
+        //---------------------------------------
+
+        JLabel title = new JLabel("CREATE TARGETS");
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setForeground(Color.WHITE);
+        title.setFont(title.getFont().deriveFont(Font.BOLD, 35f));
+
+        topContainer.add(title);
+        topContainer.add(Box.createVerticalStrut(10));
+
+        //---------------------------------------
+        // SEPARATOR
+        //---------------------------------------
+
+        JSeparator separator = new JSeparator();
+        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+
+        topContainer.add(separator);
+        topContainer.add(Box.createVerticalStrut(12));
+
+        //---------------------------------------
+        // DESCRIPTION
+        //---------------------------------------
+
+        JLabel description = new JLabel(
+                "<html><div style='text-align:center;'>"
+                        + "Create targets in random positions "
+                        + "within the maximum radar coverage."
+                        + "</div></html>"
+        );
+
+        description.setAlignmentX(Component.CENTER_ALIGNMENT);
+        description.setHorizontalAlignment(SwingConstants.CENTER);
+        description.setForeground(Color.LIGHT_GRAY);
+        description.setFont(description.getFont().deriveFont(Font.PLAIN, 18f));
+
+        topContainer.add(description);
+        topContainer.add(Box.createVerticalStrut(20));
+
+        //---------------------------------------
+        // TWO CARDS
+        //---------------------------------------
+
+        JPanel cards = new JPanel(new GridLayout(1, 2, 15, 0));
+        cards.setOpaque(false);
+
+        friendlyPanel = new SpawnColumnPanel(
+                "FRIENDLY",
+                Color.GREEN
+        );
+
+        enemyPanel = new SpawnColumnPanel(
+                "ENEMY",
+                Color.RED
+        );
+
+        JPanel friendlyCard = createCard(friendlyPanel);
+        JPanel enemyCard = createCard(enemyPanel);
+
+        cards.add(friendlyCard);
+        cards.add(enemyCard);
+
+        topContainer.add(cards);
+
+        add(topContainer, BorderLayout.NORTH);
+
+        setBorder(BorderFactory.createCompoundBorder(
+                new EmptyBorder(10, 10, 10, 10),           // dış offset
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(Color.GRAY, 3),
+                        new EmptyBorder(10, 10, 10, 10) // iç padding
+                )
+        ));
+
+        ImageIcon friendlyIcon = new ImageIcon(
+                getClass().getResource("/Assets/nato_friendly_air.png")
+        );
+
+        ImageIcon enemyIcon = new ImageIcon(
+                getClass().getResource("/Assets/nato_enemy_air.png")
+        );
+
+        friendlyPanel.setIcon(friendlyIcon);
+        enemyPanel.setIcon(enemyIcon);
+
+
+    }
+
+    private JPanel createCard(JPanel content) {
+
+        JPanel card = new JPanel(new BorderLayout());
+
+        card.setBackground(new Color(70, 70, 70));
+
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.GRAY),
+                new EmptyBorder(10, 10, 10, 10)
+        ));
+
+        card.add(content);
+
+        return card;
+    }
+
+    public SpawnColumnPanel getFriendlyPanel() {
+        return friendlyPanel;
+    }
+
+    public SpawnColumnPanel getEnemyPanel() {
+        return enemyPanel;
+    }
+}
