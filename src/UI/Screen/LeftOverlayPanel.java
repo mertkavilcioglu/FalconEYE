@@ -9,6 +9,9 @@ public class LeftOverlayPanel extends JPanel {
     private JLabel azimuthLabel;
     private JLabel barsLabel;
 
+    private TrianglePanel upTriangle;
+    private TrianglePanel downTriangle;
+
     public LeftOverlayPanel() {
 
         setBackground(Color.BLACK);
@@ -19,7 +22,7 @@ public class LeftOverlayPanel extends JPanel {
         JPanel slot1 = new JPanel(new BorderLayout());
         slot1.setOpaque(false);
 
-        TrianglePanel upTriangle = new TrianglePanel(true);
+        upTriangle = new TrianglePanel(true);
         slot1.add(upTriangle, BorderLayout.CENTER);
 
         add(slot1);
@@ -30,7 +33,7 @@ public class LeftOverlayPanel extends JPanel {
         rangeLabel = createLabel("40", 25);
         slot2.add(rangeLabel);
 
-        TrianglePanel downTriangle = new TrianglePanel(false);
+        downTriangle = new TrianglePanel(false);
         slot2.add(downTriangle);
 
         add(slot2);
@@ -67,7 +70,24 @@ public class LeftOverlayPanel extends JPanel {
     //--------------------------------------------------
 
     public void setRange(int range) {
+
         rangeLabel.setText(String.valueOf(range));
+
+        if(range >= 160){
+            upTriangle.setTriangleEnabled(false);
+        }
+        else{
+            upTriangle.setTriangleEnabled(true);
+        }
+
+        if(range <= 5){
+            downTriangle.setTriangleEnabled(false);
+        }
+        else{
+            downTriangle.setTriangleEnabled(true);
+        }
+        revalidate();
+        repaint();
     }
 
     public void setAzimuth(int azimuth) {

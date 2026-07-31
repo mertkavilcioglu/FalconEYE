@@ -6,6 +6,7 @@ import java.awt.*;
 public class TrianglePanel extends JPanel {
 
     private final boolean up;
+    private boolean enabled = true;
 
     public TrianglePanel(boolean up){
         this.up = up;
@@ -65,6 +66,11 @@ public class TrianglePanel extends JPanel {
             );
         }
 
+        if(!enabled){
+            g2.dispose();
+            return;
+        }
+
         Polygon p = new Polygon();
 
         if (up) {
@@ -84,5 +90,12 @@ public class TrianglePanel extends JPanel {
         g2.drawPolygon(p);
 
         g2.dispose();
+    }
+
+    public void setTriangleEnabled(boolean enabled){
+
+        this.enabled = enabled;
+        repaint();
+
     }
 }
