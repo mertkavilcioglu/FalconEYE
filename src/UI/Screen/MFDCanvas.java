@@ -84,6 +84,10 @@ public class MFDCanvas extends JPanel {
         if(contact.getTargetID() == selectedEntityId){
             drawSelectionBracket(g2, screenX, screenY);
         }
+
+        if(contact.getDisplayState() == RadarContact.DisplayState.TRACK || contact.getDisplayState() == RadarContact.DisplayState.IDENTIFIED){
+            drawAltitudeLabel(g2, contact, screenX, screenY);
+        }
     }
 
 
@@ -481,6 +485,67 @@ public class MFDCanvas extends JPanel {
         g2.setStroke(old);
     }
 
+    private void drawAltitudeLabel(Graphics2D g2, RadarContact contact, int centerX, int centerY){
+
+        Entity entity = world.getEntities().get(contact.getTargetID());
+
+        if(entity == null)
+            return;
+
+        Transform transform = entity.getComponent(Transform.class);
+
+        if(transform == null)
+            return;
+
+        int altitude = (int)Math.round(metersToFeet(transform.position.z) / 1000.0);
+
+        String text = String.valueOf(altitude);
+
+        Font oldFont = g2.getFont();
+
+        switch(contact.getDisplayState()){
+
+            case CONTACT:
+                g2.setColor(Color.LIGHT_GRAY);
+                break;
+
+            case TRACK:
+                g2.setColor(Color.YELLOW);
+                break;
+
+            case IDENTIFIED:
+
+                switch(entity.getIff()){
+
+                    case FRIEND:
+                        g2.setColor(Color.GREEN);
+                        break;
+
+                    case HOSTILE:
+                        g2.setColor(Color.RED);
+                        break;
+
+                    default:
+                        g2.setColor(Color.LIGHT_GRAY);
+                        break;
+                }
+
+                break;
+        }
+
+        g2.setFont(oldFont.deriveFont(Font.BOLD, 20f));
+
+        FontMetrics fm = g2.getFontMetrics();
+
+        int x = centerX - fm.stringWidth(text) / 2;
+        int y = centerY + radius + 18;
+
+
+        g2.drawString(text, x, y);
+
+        g2.setFont(oldFont);
+    }
+
     public void refreshRadarDisplay(){
         repaint();
     }
@@ -491,5 +556,9 @@ public class MFDCanvas extends JPanel {
 
     public int getSelectedEntityId(){
         return selectedEntityId;
+    }
+
+    private double metersToFeet(double meters){
+        return meters * 3.28084;
     }
 }
