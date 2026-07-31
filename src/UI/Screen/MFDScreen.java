@@ -93,14 +93,14 @@ public class MFDScreen extends JPanel {
     }
 
     public void updateRangeLabel(int range){
-
         overlayWest.setRange(range);
-
     }
 
     public void updateAzimuthLabel(double azimuth){
-
         overlayWest.setAzimuth((int) azimuth);
+    }
 
+    public void updateBarsLabel(int bars){
+        overlayWest.setBars(bars);
     }
 }

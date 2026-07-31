@@ -36,7 +36,7 @@ public class LeftOSBPanel extends JPanel {
             wrapper.setOpaque(false);
             int osbNumber = buttonNumbers[buttonIndex];
 
-            JButton btn = new OSBButton(String.valueOf(osbNumber));
+            JButton btn = new OSBButton("");
             buttonIndex++;
 
             btn.addActionListener(e -> {
@@ -55,14 +55,15 @@ public class LeftOSBPanel extends JPanel {
                         break;
 
                     case 18:
-
                         radar.cycleAzimuth();
                         updateAzimuth();
                         //System.out.println("OSB 18 AZIMUTH");
                         break;
 
                     case 17:
-                        //System.out.println("OSB 17 PRESSED");
+                        radar.cycleBars();
+                        updateBars();
+                        //System.out.println("OSB 17 BARS");
                         break;
 
                     case 16:
@@ -91,6 +92,16 @@ public class LeftOSBPanel extends JPanel {
     private void updateRange(){
 
         mfdScreen.updateRangeLabel(radar.getRangeNM());
+        mfdScreen.getMfdCanvas().repaint();
+    }
+
+    private void updateBars(){
+
+        mfdScreen.updateBarsLabel(
+                radar.getBars()
+        );
+
+
         mfdScreen.getMfdCanvas().repaint();
     }
 }

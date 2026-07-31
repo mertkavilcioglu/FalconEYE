@@ -38,6 +38,8 @@ public class Radar extends Component {
     private long contactTimeout = 5000; // ms
 
     private int bars = 4;
+    private final int[] barOptions = {4, 1, 2};
+
     private int currentBar = 0;
     private boolean movingUp = true;
 
@@ -273,6 +275,14 @@ public class Radar extends Component {
     }
 
     private void updatePitch(){
+
+        if(bars <= 1){
+
+            pitch = 0;
+            return;
+
+        }
+
         pitch = (-elevation / 2) + currentBar * (elevation / (bars - 1));
     }
 
@@ -351,6 +361,27 @@ public class Radar extends Component {
         }
 
         azimuth = azimuthOptions[index];
+    }
+
+    public void cycleBars(){
+
+        int index = 0;
+        for(int i = 0; i < barOptions.length; i++){
+
+            if(bars == barOptions[i]){
+                index = i;
+                break;
+            }
+        }
+        index++;
+
+        if(index >= barOptions.length){
+            index = 0;
+        }
+        bars = barOptions[index];
+        currentBar = 0;
+        movingUp = true;
+        updatePitch();
     }
 
 
