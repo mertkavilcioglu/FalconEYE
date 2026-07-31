@@ -27,7 +27,7 @@ public class LeftOverlayPanel extends JPanel {
         JPanel slot2 = new JPanel(new GridLayout(2, 1));
         slot2.setOpaque(false);
 
-        rangeLabel = createLabel("80", 25);
+        rangeLabel = createLabel("40", 25);
         slot2.add(rangeLabel);
 
         TrianglePanel downTriangle = new TrianglePanel(false);

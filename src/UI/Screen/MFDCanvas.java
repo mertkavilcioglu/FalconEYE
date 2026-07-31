@@ -391,7 +391,7 @@ public class MFDCanvas extends JPanel {
                 centerY + dropLength
         );
 
-        
+
         g2.drawLine(
                 centerX + gap,
                 centerY,

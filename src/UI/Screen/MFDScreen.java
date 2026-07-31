@@ -91,4 +91,10 @@ public class MFDScreen extends JPanel {
     public MFDCanvas getMfdCanvas() {
         return mfdCanvas;
     }
+
+    public void updateRangeLabel(int range){
+
+        overlayWest.setRange(range);
+
+    }
 }

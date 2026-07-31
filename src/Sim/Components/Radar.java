@@ -11,6 +11,16 @@ import java.util.Iterator;
 
 public class Radar extends Component {
     private int range = 74080; // 40NM
+
+    private final int[] rangeOptions = {
+            9260,      // 5 NM
+            18520,     // 10 NM
+            37040,     // 20 NM
+            74080,     // 40 NM
+            148160,    // 80 NM
+            296320     // 160 NM
+    };
+
     private double azimuth = 120;
     private double elevation = 4;
 
@@ -283,6 +293,43 @@ public class Radar extends Component {
         }
         updatePitch();
     }
+
+    public void increaseRange(){
+
+        int index = getRangeIndex();
+
+        if(index < rangeOptions.length - 1){
+            range = rangeOptions[index + 1];
+        }
+    }
+
+
+    public void decreaseRange(){
+
+        int index = getRangeIndex();
+
+        if(index > 0){
+            range = rangeOptions[index - 1];
+        }
+    }
+
+
+    private int getRangeIndex(){
+
+        for(int i = 0; i < rangeOptions.length; i++){
+
+            if(range == rangeOptions[i])
+                return i;
+        }
+
+        return 0;
+    }
+
+    public int getRangeNM(){
+
+        return range / 1852;
+    }
+
 
     public double getBeamOffset(){
         return beamOffset;
