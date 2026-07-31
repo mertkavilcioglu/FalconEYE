@@ -112,6 +112,13 @@ public class UITheme {
     public static final Color SCROLL_THUMB = new Color(72, 72, 72);
     public static final Color SCROLL_THUMB_HOVER = new Color(90, 90, 90);
 
+    public static final Color OSB = Color.LIGHT_GRAY;
+    public static final Color OSB_HOVER = new Color(180,180,180);
+    public static final Color OSB_PRESSED = new Color(140,140,140);
+
+    public static final Color TREE_SELECTION = new Color(82,82,82);
+
+    public static final Color TREE_HOVER = new Color(68,68,68);
 
 
 

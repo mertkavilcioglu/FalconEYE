@@ -22,6 +22,8 @@ public class HierarchyView extends JPanel {
 
     private HashMap<Integer, TargetTreeNodes> nodeMap = new HashMap<>();
 
+    private int hoveredRow = -1;
+
     public HierarchyView() {
 
         setBackground(UITheme.PANEL_BG);
@@ -139,7 +141,7 @@ public class HierarchyView extends JPanel {
         };
 
         renderer.setBackgroundNonSelectionColor(UITheme.CARD_BG);
-        renderer.setBackgroundSelectionColor(UITheme.TREE_BG);
+        renderer.setBackgroundSelectionColor(UITheme.TREE_SELECTION);
 
         renderer.setBorderSelectionColor(null);
 
@@ -472,9 +474,7 @@ public class HierarchyView extends JPanel {
 
     private void expandNode(TreePath path){
 
-        DefaultMutableTreeNode node =
-                (DefaultMutableTreeNode) path.getLastPathComponent();
-
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
         String text = node.getUserObject().toString();
 
         if(!text.equals("Details")){
@@ -483,7 +483,11 @@ public class HierarchyView extends JPanel {
 
         for(int i = 0; i < node.getChildCount(); i++){
 
-            expandNode(path.pathByAddingChild(node.getChildAt(i)));
+            TreePath childPath = path.pathByAddingChild(node.getChildAt(i));
+
+            if(!node.getChildAt(i).toString().equals("Details")){
+                expandNode(childPath);
+            }
         }
     }
 
