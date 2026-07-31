@@ -2,10 +2,10 @@ package UI;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import Sim.Components.Radar;
 import Sim.Entity;
@@ -20,6 +20,8 @@ public class HierarchyView extends JPanel {
     private final DefaultTreeModel treeModel;
     private final JTree tree;
 
+    private HashMap<Integer, TargetTreeNodes> nodeMap = new HashMap<>();
+
     public HierarchyView() {
 
         setBackground(Color.DARK_GRAY);
@@ -29,10 +31,6 @@ public class HierarchyView extends JPanel {
         setPreferredSize(new Dimension(width, 0));
 
         setLayout(new BorderLayout());
-
-        //----------------------------------------
-        // TOP
-        //----------------------------------------
 
         JPanel topContainer = new JPanel();
         topContainer.setOpaque(false);
@@ -64,13 +62,8 @@ public class HierarchyView extends JPanel {
         description.setHorizontalAlignment(SwingConstants.CENTER);
         description.setForeground(Color.LIGHT_GRAY);
         description.setFont(description.getFont().deriveFont(Font.PLAIN,18f));
-
         topContainer.add(description);
         topContainer.add(Box.createVerticalStrut(20));
-
-        //----------------------------------------
-        // TREE
-        //----------------------------------------
 
         rootNode = new DefaultMutableTreeNode("TARGETS");
 
@@ -88,13 +81,65 @@ public class HierarchyView extends JPanel {
 
         tree.setFont(tree.getFont().deriveFont(Font.PLAIN,16f));
 
-        DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+        DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer(){
+
+            @Override
+            public Component getTreeCellRendererComponent(
+                    JTree tree,
+                    Object value,
+                    boolean sel,
+                    boolean expanded,
+                    boolean leaf,
+                    int row,
+                    boolean hasFocus){
+
+                super.getTreeCellRendererComponent(
+                        tree,
+                        value,
+                        sel,
+                        expanded,
+                        leaf,
+                        row,
+                        hasFocus);
+
+                DefaultMutableTreeNode node =
+                        (DefaultMutableTreeNode)value;
+
+                String text = node.getUserObject().toString();
+
+                Font base = getFont();
+
+                if(text.startsWith("TARGETS")){
+
+                    setForeground(new Color(255,215,0));   // Gold
+                    setFont(base.deriveFont(Font.BOLD,18f));
+
+                }
+                else if(text.startsWith("FRIENDLIES")){
+
+                    setForeground(new Color(90,180,255));
+                    setFont(base.deriveFont(Font.BOLD,18f));
+
+                }
+                else if(text.startsWith("ENEMIES")){
+
+                    setForeground(new Color(255,50,50));
+                    setFont(base.deriveFont(Font.BOLD,18f));
+
+                }
+                else{
+
+                    setForeground(Color.WHITE);
+                    setFont(base.deriveFont(Font.PLAIN,16f));
+
+                }
+
+                return this;
+            }
+        };
 
         renderer.setBackgroundNonSelectionColor(new Color(70,70,70));
         renderer.setBackgroundSelectionColor(new Color(90,90,90));
-
-        renderer.setTextNonSelectionColor(Color.WHITE);
-        renderer.setTextSelectionColor(Color.WHITE);
 
         renderer.setBorderSelectionColor(null);
 
@@ -107,16 +152,10 @@ public class HierarchyView extends JPanel {
         JScrollPane scrollPane = new JScrollPane(tree);
 
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-
         scrollPane.getViewport().setBackground(new Color(70,70,70));
-
         topContainer.add(scrollPane);
 
         add(topContainer, BorderLayout.CENTER);
-
-        //----------------------------------------
-        // OUTER BORDER
-        //----------------------------------------
 
         setBorder(BorderFactory.createCompoundBorder(
                 new EmptyBorder(10,10,10,10),
@@ -127,123 +166,260 @@ public class HierarchyView extends JPanel {
         ));
     }
 
-    public void rebuild(World world){
+    public void addEntity(Entity e){
+
+        boolean isFriendly = e.getIff() == Entity.IFF.FRIEND;
+
+        DefaultMutableTreeNode parentNode;
+
+        if(isFriendly){
+            parentNode = (DefaultMutableTreeNode) rootNode.getChildAt(0);
+        }
+        else{
+            parentNode = (DefaultMutableTreeNode) rootNode.getChildAt(1);
+        }
+
+        TargetTreeNodes nodes = new TargetTreeNodes();
+
+        nodes.target = new DefaultMutableTreeNode((isFriendly ? "Friendly #" : "Enemy #") + e.getId());
+
+        nodes.range = new DefaultMutableTreeNode();
+        nodes.bearing = new DefaultMutableTreeNode();
+        nodes.altitude = new DefaultMutableTreeNode();
+        nodes.speed = new DefaultMutableTreeNode();
+
+        nodes.target.add(nodes.range);
+        nodes.target.add(nodes.bearing);
+        nodes.target.add(nodes.altitude);
+        nodes.target.add(nodes.speed);
+
+        DefaultMutableTreeNode details = new DefaultMutableTreeNode("Details");
+
+        DefaultMutableTreeNode rel = new DefaultMutableTreeNode("Relative Position");
+
+        nodes.relX = new DefaultMutableTreeNode();
+        nodes.relY = new DefaultMutableTreeNode();
+        nodes.relZ = new DefaultMutableTreeNode();
+
+        rel.add(nodes.relX);
+        rel.add(nodes.relY);
+        rel.add(nodes.relZ);
+
+        DefaultMutableTreeNode pos = new DefaultMutableTreeNode("Position");
+
+        nodes.posX = new DefaultMutableTreeNode();
+        nodes.posY = new DefaultMutableTreeNode();
+        nodes.posZ = new DefaultMutableTreeNode();
+
+        pos.add(nodes.posX);
+        pos.add(nodes.posY);
+        pos.add(nodes.posZ);
+
+        DefaultMutableTreeNode vel = new DefaultMutableTreeNode("Velocity");
+
+        nodes.velX = new DefaultMutableTreeNode();
+        nodes.velY = new DefaultMutableTreeNode();
+        nodes.velZ = new DefaultMutableTreeNode();
+
+        vel.add(nodes.velX);
+        vel.add(nodes.velY);
+        vel.add(nodes.velZ);
+
+        details.add(rel);
+        details.add(pos);
+        details.add(vel);
+
+        nodes.target.add(details);
+
+        parentNode.add(nodes.target);
+
+        nodeMap.put(e.getId(), nodes);
+
+        updateEntity(e);
+        updateCounters();
+    }
+
+    public void updateEntity(Entity e){
+
+        TargetTreeNodes nodes = nodeMap.get(e.getId());
+
+        if(nodes == null)
+            return;
+
+        Transform player = e.getWorld().getPlayer().getComponent(Transform.class);
+        Transform target = e.getComponent(Transform.class);
+
+        Vec3 rel = new Vec3(
+                target.position.x-player.position.x,
+                target.position.y-player.position.y,
+                target.position.z-player.position.z
+        );
+
+        Radar radar = e.getWorld().getPlayer().getComponent(Radar.class);
+
+        double rangeNM = metersToNM(rel.length());
+        double bearing = Math.toDegrees(Math.atan2(rel.x, rel.y));
+
+        if(bearing < 0)
+            bearing += 360;
+
+        bearing -= radar.getHeading();
+
+        while(bearing > 180)
+            bearing -= 360;
+
+        while(bearing < -180)
+            bearing += 360;
+
+        double altitudeFt = metersToFeet(target.position.z);
+
+        Velocity velocity = e.getComponent(Velocity.class);
+        Vec3 vel = velocity.getVelocity();
+
+        double speedKt = metersPerSecondToKnots(vel.length());
+
+        // HEADER
+        nodes.range.setUserObject(String.format("Range : %.1f NM",rangeNM));
+        nodes.bearing.setUserObject(String.format("Bearing : %+d°", (int)Math.round(bearing)));
+        nodes.altitude.setUserObject(String.format("Altitude : %.0f ft", altitudeFt));
+        nodes.speed.setUserObject(String.format("Speed : %.0f kt", speedKt));
+
+
+        // RELATIVE
+        nodes.relX.setUserObject(String.format("X : %.2f NM", metersToNM(rel.x)));
+        nodes.relY.setUserObject(String.format("Y : %.2f NM", metersToNM(rel.y)));
+        nodes.relZ.setUserObject(String.format("Z : %.0f ft", metersToFeet(rel.z)));
+
+
+        // POSITION
+        nodes.posX.setUserObject(String.format("X : %.2f NM", metersToNM(target.position.x)));
+        nodes.posY.setUserObject(String.format("Y : %.2f NM", metersToNM(target.position.y)));
+        nodes.posZ.setUserObject(String.format("Z : %.0f ft", metersToFeet(target.position.z)));
+
+
+        // VELOCITY
+        nodes.velX.setUserObject(String.format("X : %.1f kt", metersPerSecondToKnots(vel.x)));
+        nodes.velY.setUserObject(String.format("Y : %.1f kt", metersPerSecondToKnots(vel.y)));
+        nodes.velZ.setUserObject(String.format("Z : %.1f kt", metersPerSecondToKnots(vel.z)));
+
+        treeModel.nodeChanged(nodes.range);
+        treeModel.nodeChanged(nodes.bearing);
+        treeModel.nodeChanged(nodes.altitude);
+        treeModel.nodeChanged(nodes.speed);
+
+        treeModel.nodeChanged(nodes.relX);
+        treeModel.nodeChanged(nodes.relY);
+        treeModel.nodeChanged(nodes.relZ);
+
+        treeModel.nodeChanged(nodes.posX);
+        treeModel.nodeChanged(nodes.posY);
+        treeModel.nodeChanged(nodes.posZ);
+
+        treeModel.nodeChanged(nodes.velX);
+        treeModel.nodeChanged(nodes.velY);
+        treeModel.nodeChanged(nodes.velZ);
+    }
+
+    private int extractEntityId(String text){
+
+        int index = text.lastIndexOf('#');
+
+        if(index == -1)
+            return -1;
+
+        return Integer.parseInt(text.substring(index + 1));
+    }
+
+    public void initialize(World world){
 
         rootNode.removeAllChildren();
-        DefaultMutableTreeNode friendliesNode = new DefaultMutableTreeNode("FRIENDLIES (0)");
-        DefaultMutableTreeNode enemiesNode = new DefaultMutableTreeNode("ENEMIES (0)");
 
-        rootNode.add(friendliesNode);
-        rootNode.add(enemiesNode);
+        DefaultMutableTreeNode friendlies = new DefaultMutableTreeNode("FRIENDLIES");
+        DefaultMutableTreeNode enemies = new DefaultMutableTreeNode("ENEMIES");
 
-        int friendlyCount = 0;
-        int enemyCount = 0;
+        rootNode.add(friendlies);
+        rootNode.add(enemies);
+
+        nodeMap.clear();
 
         for(Entity e : world.getEntities().values()){
 
-            if (e == world.getPlayer())
+            if(e == world.getPlayer())
                 continue;
 
-            boolean isFriendly = e.getIff() == Entity.IFF.FRIEND;
-
-            DefaultMutableTreeNode targetNode;
-
-            if(isFriendly){
-                targetNode = new DefaultMutableTreeNode("Friendly #" + e.getId());
-                friendlyCount++;
-            }
-            else{
-                targetNode = new DefaultMutableTreeNode("Enemy #" + e.getId());
-                enemyCount++;
-            }
-
-
-            // ID ****************************************************************
-           // targetNode.add(new DefaultMutableTreeNode("ID : " + e.getId()));
-
-
-            // Relative Position ****************************************************************
-            Transform player = world.getPlayer().getComponent(Transform.class);
-            Transform target = e.getComponent(Transform.class);
-
-            Vec3 rel = new Vec3(
-                    target.position.x-player.position.x,
-                    target.position.y-player.position.y,
-                    target.position.z-player.position.z
-            );
-
-            double rangeNM = metersToNM(rel.length());
-
-            double bearing = Math.toDegrees(
-                    Math.atan2(rel.x, rel.y));
-
-            if(bearing < 0)
-                bearing += 360;
-
-
-            Radar radar = world.getPlayer().getComponent(Radar.class);
-            bearing -= radar.getHeading();
-
-            while(bearing > 180)
-                bearing -= 360;
-
-            while(bearing < -180)
-                bearing += 360;
-
-            double altitudeFt = metersToFeet(target.position.z);
-
-            Velocity velocity = e.getComponent(Velocity.class);
-            Vec3 velVec = velocity.getVelocity();
-            double speedKt = metersPerSecondToKnots(velVec.length());
-
-            targetNode.add(new DefaultMutableTreeNode(String.format("Range : %.1f NM", rangeNM)));
-            targetNode.add(new DefaultMutableTreeNode(String.format("Bearing : %+d°", (int)Math.round(bearing))));
-            targetNode.add(new DefaultMutableTreeNode(String.format("Altitude : %.0f ft", altitudeFt)));
-            targetNode.add(new DefaultMutableTreeNode(String.format("Speed : %.0f kt", speedKt)));
-
-            DefaultMutableTreeNode relNode = new DefaultMutableTreeNode("Relative Position");
-
-            relNode.add(new DefaultMutableTreeNode(String.format("X : %.2f NM",metersToNM(rel.x))));
-            relNode.add(new DefaultMutableTreeNode(String.format("Y : %.2f NM",metersToNM(rel.y))));
-            relNode.add(new DefaultMutableTreeNode(String.format("Z : %.0f ft",metersToFeet(rel.z))));
-
-            targetNode.add(relNode);
-
-
-            // Position ****************************************************************
-            DefaultMutableTreeNode posNode = new DefaultMutableTreeNode("Position");
-            posNode.add(new DefaultMutableTreeNode(String.format("X : %.2f NM", metersToNM(target.position.x))));
-            posNode.add(new DefaultMutableTreeNode(String.format("Y : %.2f NM", metersToNM(target.position.y))));
-            posNode.add(new DefaultMutableTreeNode(String.format("Z : %.0f ft", metersToFeet(target.position.z))));
-
-            targetNode.add(posNode);
-
-
-            // Velocity ****************************************************************
-
-
-            DefaultMutableTreeNode velNode = new DefaultMutableTreeNode("Velocity");
-
-            velNode.add(new DefaultMutableTreeNode(String.format("X : %.1f kt", metersPerSecondToKnots(velocity.getVelocity().x))));
-            velNode.add(new DefaultMutableTreeNode(String.format("Y : %.1f kt", metersPerSecondToKnots(velocity.getVelocity().y))));
-            velNode.add(new DefaultMutableTreeNode(String.format("Z : %.1f kt", metersPerSecondToKnots(velocity.getVelocity().z))));
-
-            targetNode.add(velNode);
-
-
-            if(isFriendly)
-                friendliesNode.add(targetNode);
-            else
-                enemiesNode.add(targetNode);
+            addEntity(e);
         }
 
-        friendliesNode.setUserObject("FRIENDLIES (" + friendlyCount + ")");
-        enemiesNode.setUserObject("ENEMIES (" + enemyCount + ")");
-
         treeModel.reload();
+        updateCounters();
 
-        for(int i=0;i<tree.getRowCount();i++)
-            tree.expandRow(i);
+        expandAllExceptDetails();
+
+    }
+
+    public void updateAll(World world){
+
+        for(Entity e : world.getEntities().values()){
+
+            if(e == world.getPlayer())
+                continue;
+
+            updateEntity(e);
+        }
+    }
+
+    public void removeEntity(Entity e){
+
+        TargetTreeNodes nodes = nodeMap.remove(e.getId());
+
+        if(nodes == null)
+            return;
+
+        MutableTreeNode parent = (MutableTreeNode) nodes.target.getParent();
+
+        if(parent != null){
+            treeModel.removeNodeFromParent(nodes.target);
+        }
+
+        updateCounters();
+    }
+
+    private void updateCounters(){
+
+        DefaultMutableTreeNode friendlies = (DefaultMutableTreeNode) rootNode.getChildAt(0);
+        DefaultMutableTreeNode enemies = (DefaultMutableTreeNode) rootNode.getChildAt(1);
+        friendlies.setUserObject("FRIENDLIES (" + friendlies.getChildCount() + ")");
+        enemies.setUserObject("ENEMIES (" + enemies.getChildCount() + ")");
+
+        treeModel.nodeChanged(friendlies);
+        treeModel.nodeChanged(enemies);
+    }
+
+    private int getParentEntityId(DefaultMutableTreeNode detailsNode){
+        DefaultMutableTreeNode parent = (DefaultMutableTreeNode) detailsNode.getParent();
+        return extractEntityId(parent.getUserObject().toString());
+    }
+
+    private void expandAllExceptDetails(){
+
+        expandNode(new TreePath(rootNode));
+    }
+
+    private void expandNode(TreePath path){
+
+        DefaultMutableTreeNode node =
+                (DefaultMutableTreeNode) path.getLastPathComponent();
+
+        String text = node.getUserObject().toString();
+
+        if(!text.equals("Details")){
+            tree.expandPath(path);
+        }
+
+        for(int i = 0; i < node.getChildCount(); i++){
+
+            expandNode(path.pathByAddingChild(node.getChildAt(i)));
+        }
     }
 
 

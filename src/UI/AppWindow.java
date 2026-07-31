@@ -30,7 +30,8 @@ public class AppWindow extends JFrame {
         add(targetControlPanel, BorderLayout.EAST);
         add(mfdView, BorderLayout.CENTER);
 
-        new Timer(250, e -> hierarchyView.rebuild(app.getWorld())).start();
+        hierarchyView.initialize(app.getWorld());
+        new Timer(250, e -> hierarchyView.updateAll(app.getWorld())).start();
     }
 
     public MFDView getMfdView(){
