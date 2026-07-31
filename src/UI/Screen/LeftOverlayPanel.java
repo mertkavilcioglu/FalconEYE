@@ -29,7 +29,7 @@ public class LeftOverlayPanel extends JPanel {
         JPanel slot2 = new JPanel(new GridLayout(2, 1));
         slot2.setOpaque(false);
 
-        rangeLabel = createLabel("80");
+        rangeLabel = createLabel("80", 25);
         slot2.add(rangeLabel);
 
         TrianglePanel downTriangle = new TrianglePanel(false);
@@ -40,7 +40,9 @@ public class LeftOverlayPanel extends JPanel {
         JPanel slot3 = new JPanel(new BorderLayout());
         slot3.setOpaque(false);
 
-        azimuthLabel = createLabelVertical("A", "6");
+        int verticalMargin = 1;
+
+        azimuthLabel = createLabelVertical("A", "6", verticalMargin);
 
         slot3.add(azimuthLabel, BorderLayout.CENTER);
 
@@ -49,7 +51,7 @@ public class LeftOverlayPanel extends JPanel {
         JPanel slot4 = new JPanel(new BorderLayout());
         slot4.setOpaque(false);
 
-        barsLabel = createLabelVertical("4", "B");
+        barsLabel = createLabelVertical("4", "B", verticalMargin);
 
         slot4.add(barsLabel, BorderLayout.CENTER);
 
@@ -93,48 +95,40 @@ public class LeftOverlayPanel extends JPanel {
                 break;
         }
 
-        azimuthLabel.setText(
-                "<html><div style='text-align:center;'>A<br>" + value + "</div></html>"
-        );
+        azimuthLabel.setText("<html><div style='text-align:center;'>A<br>" + value + "</div></html>");
     }
 
     public void setBars(int bars) {
 
-        barsLabel.setText(
-                "<html><div style='text-align:center;'>" + bars + "<br>B</div></html>"
-        );
+        barsLabel.setText("<html><div style='text-align:center;'>" + bars + "<br>B</div></html>");
     }
-    
+
     private JLabel createLabel(String text){
-
-        JLabel label = new JLabel(text);
-
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setVerticalAlignment(SwingConstants.CENTER);
-        label.setForeground(Color.WHITE);
-        label.setOpaque(true);
-        label.setBackground(Color.BLACK);
-
-        label.setFont(label.getFont().deriveFont(Font.BOLD, 24f));
-
-        return label;
+        return new OverlayLabel(text);
     }
 
-    private JLabel createLabelVertical(String upper,String lower){
+    private JLabel createLabel(String text, int margin){
+        return new OverlayLabel(text, margin);
+    }
 
-        JLabel label = new JLabel(
-                "<html><div style='text-align:center;'>"+upper+"<br>"+lower+"</div></html>"
+    private JLabel createLabelVertical(String upper, String lower){
+        return new OverlayLabel(
+                "<html><div style='text-align:center;'>"
+                        + upper +
+                        "<br>" +
+                        lower +
+                        "</div></html>"
         );
+    }
 
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setVerticalAlignment(SwingConstants.CENTER);
-        label.setForeground(Color.WHITE);
-
-        label.setOpaque(true);
-        label.setBackground(Color.BLACK);
-
-        label.setFont(label.getFont().deriveFont(Font.BOLD, 24f));
-
-        return label;
+    private JLabel createLabelVertical(String upper, String lower, int margin){
+        return new OverlayLabel(
+                "<html><div style='text-align:center;'>"
+                        + upper +
+                        "<br>"
+                        + lower +
+                        "</div></html>",
+                margin
+        );
     }
 }

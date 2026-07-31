@@ -4,17 +4,31 @@ import javax.swing.*;
 import java.awt.*;
 
 public class RightOverlayPanel extends JPanel {
-    public RightOverlayPanel(){
-        setBackground(Color.BLACK);
 
-        int cells = 5;
-        setLayout(new GridLayout(cells,1));
+    public RightOverlayPanel() {
 
-        for(int i=0 ; i<cells ; i++){
-            JLabel text = new JLabel("section " + (i+1));
-            text.setHorizontalAlignment(SwingConstants.CENTER);
-            text.setForeground(Color.WHITE);
-            add(text);
+        setOpaque(false);
+        setLayout(new GridLayout(5, 1));
+
+        for (int i = 0; i < 5; i++) {
+
+            if (i == 1) {
+
+                JPanel section = new JPanel(new GridLayout(4, 1));
+                section.setOpaque(false);
+
+                JLabel contLabel = new OverlayLabel("CONT");
+
+                section.add(contLabel);
+                section.add(new JLabel());
+                section.add(new JLabel());
+                section.add(new JLabel());
+
+                add(section);
+            }
+            else {
+                add(new JLabel());
+            }
         }
     }
 }

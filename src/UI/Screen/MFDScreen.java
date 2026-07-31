@@ -42,6 +42,35 @@ public class MFDScreen extends JPanel {
         });
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g.create();
+
+        drawFrame(g2);
+
+        g2.dispose();
+    }
+
+    private void drawFrame(Graphics2D g2) {
+
+        int w = getWidth();
+        int h = getHeight();
+
+        int margin = overlayThickness * 7 / 18 ;
+
+        g2.setColor(Color.WHITE);
+        g2.setStroke(new BasicStroke(2f));
+
+        g2.drawRect(
+                margin,
+                margin,
+                w - margin * 2,
+                h - margin * 2
+        );
+    }
+
     private void layoutChildren() {
 
         int w = getWidth();
