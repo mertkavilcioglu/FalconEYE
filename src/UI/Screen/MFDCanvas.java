@@ -32,9 +32,14 @@ public class MFDCanvas extends JPanel {
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
+
         Graphics2D g2 = (Graphics2D) g;
+
         defineScale(world.player.getComponent(Radar.class).getRange());
+
         drawRadarDebug(g2);
+        drawRollReference(g2);
+        drawAzimuthRangeLines(g2, world.player.getComponent(Radar.class));
         drawEntities(g2);
     }
 
@@ -191,8 +196,8 @@ public class MFDCanvas extends JPanel {
 
         int tickCount = 7;
 
-        double left = w * 0.18;
-        double right = w * 0.82;
+        double left = w * 0.26;
+        double right = w * 0.74;
         double width = right - left;
 
         Stroke oldStroke = g2.getStroke();
@@ -231,8 +236,8 @@ public class MFDCanvas extends JPanel {
         double fullLeft = -overlayThickness + top*10;
         double fullRight = w + overlayThickness - top*10;
 
-        double canvasLeft = w * 0.15;
-        double canvasRight = w * 0.85;
+        double canvasLeft = w * 0.26;
+        double canvasRight = w * 0.74;
 
         double left;
         double right;
@@ -277,8 +282,8 @@ public class MFDCanvas extends JPanel {
 
         int lineCount = 7;
 
-        int top = (int)(h * 0.18);
-        int bottom = (int)(h * 0.82);
+        int top = (int)(h * 0.26);
+        int bottom = (int)(h * 0.74);
 
         double step = (double)(bottom - top) / (lineCount - 1);
 
@@ -347,5 +352,119 @@ public class MFDCanvas extends JPanel {
 
     public void setOverlayThickness(int overlayThickness){
         this.overlayThickness = overlayThickness;
+    }
+
+    private void drawRollReference(Graphics2D g2){
+
+        int w = getWidth();
+        int h = getHeight();
+
+        int centerX = w / 2;
+        int centerY = h / 2;
+
+        int leftEdge = (int)(w * 0.26);
+        int rightEdge = (int)(w * 0.74);
+
+        int gap = w / 40;
+        int wingLength = centerX - gap - leftEdge;
+        int dropLength = h / 60;
+
+
+
+        g2.setColor(Color.CYAN);
+
+        Stroke oldStroke = g2.getStroke();
+        g2.setStroke(new BasicStroke(2f));
+
+
+        g2.drawLine(
+                centerX - gap,
+                centerY,
+                centerX - gap - wingLength,
+                centerY
+        );
+
+        g2.drawLine(
+                centerX - gap - wingLength,
+                centerY,
+                centerX - gap - wingLength,
+                centerY + dropLength
+        );
+
+        
+        g2.drawLine(
+                centerX + gap,
+                centerY,
+                centerX + gap + wingLength,
+                centerY
+        );
+
+        g2.drawLine(
+                centerX + gap + wingLength,
+                centerY,
+                centerX + gap + wingLength,
+                centerY + dropLength
+        );
+
+
+        g2.setStroke(oldStroke);
+    }
+
+    private void drawAzimuthRangeLines(Graphics2D g2, Radar radar){
+
+        int w = getWidth();
+        int h = getHeight();
+
+        double azimuth = radar.getAzimuth();
+
+        double leftRatio;
+        double rightRatio;
+
+
+        if(azimuth == 60.0){
+
+            leftRatio = 0.261;
+            rightRatio = 0.74;
+
+        }
+        else if(azimuth == 20.0){
+
+            leftRatio = 0.42;
+            rightRatio = 0.58;
+
+        }
+        else{
+            return;
+        }
+
+
+        int x1 = (int)(w * leftRatio);
+        int x2 = (int)(w * rightRatio);
+
+
+        int topOffset = (int)(h * 0.08);
+        int bottomOffset = (int)(h * 0.12);
+
+
+        int startY = topOffset;
+        int endY = h - bottomOffset;
+
+
+        g2.setColor(Color.CYAN);
+
+
+        Stroke oldStroke = g2.getStroke();
+        g2.setStroke(new BasicStroke(1.5f));
+
+        g2.drawLine(x1, startY, x1, endY);
+
+        g2.drawLine(x2, startY, x2, endY);
+
+
+        g2.setStroke(oldStroke);
+    }
+
+    public void refreshRadarDisplay(){
+        repaint();
     }
 }
