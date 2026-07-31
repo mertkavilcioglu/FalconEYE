@@ -11,7 +11,7 @@ public class TargetControlPanel extends JPanel {
 
     public TargetControlPanel() {
 
-        setBackground(Color.DARK_GRAY);
+        setBackground(UITheme.PANEL_BG);
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int width = (int) (screen.width * 0.21875);
@@ -30,7 +30,7 @@ public class TargetControlPanel extends JPanel {
 
         JLabel title = new JLabel("CREATE TARGETS");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setForeground(Color.WHITE);
+        title.setForeground(UITheme.TITLE);
         title.setFont(title.getFont().deriveFont(Font.BOLD, 35f));
 
         topContainer.add(title);
@@ -59,7 +59,7 @@ public class TargetControlPanel extends JPanel {
 
         description.setAlignmentX(Component.CENTER_ALIGNMENT);
         description.setHorizontalAlignment(SwingConstants.CENTER);
-        description.setForeground(Color.LIGHT_GRAY);
+        description.setForeground(UITheme.DESCRIPTION);
         description.setFont(description.getFont().deriveFont(Font.PLAIN, 18f));
 
         topContainer.add(description);
@@ -74,12 +74,12 @@ public class TargetControlPanel extends JPanel {
 
         friendlyPanel = new SpawnColumnPanel(
                 "FRIENDLY",
-                Color.GREEN
+                UITheme.FRIENDLY
         );
 
         enemyPanel = new SpawnColumnPanel(
                 "ENEMY",
-                Color.RED
+                UITheme.ENEMY
         );
 
         JPanel friendlyCard = createCard(friendlyPanel);
@@ -95,7 +95,7 @@ public class TargetControlPanel extends JPanel {
         setBorder(BorderFactory.createCompoundBorder(
                 new EmptyBorder(10, 10, 10, 10),           // dış offset
                 BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(Color.GRAY, 3),
+                        BorderFactory.createLineBorder(UITheme.BORDER, 3),
                         new EmptyBorder(10, 10, 10, 10) // iç padding
                 )
         ));
@@ -118,10 +118,10 @@ public class TargetControlPanel extends JPanel {
 
         JPanel card = new JPanel(new BorderLayout());
 
-        card.setBackground(new Color(70, 70, 70));
+        card.setBackground(UITheme.CARD_BG);
 
         card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.GRAY),
+                BorderFactory.createLineBorder(UITheme.BORDER),
                 new EmptyBorder(10, 10, 10, 10)
         ));
 

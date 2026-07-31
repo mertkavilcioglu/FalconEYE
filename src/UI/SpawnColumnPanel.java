@@ -58,7 +58,7 @@ public class SpawnColumnPanel extends JPanel {
 
         formationButton = new ToolButton("Create in Formation");
 
-        deleteButton = new ToolButton("Delete All");
+        deleteButton = new ToolButton("Delete All", true);
 
         deleteButton.setBackground(new Color(120,35,35));
 

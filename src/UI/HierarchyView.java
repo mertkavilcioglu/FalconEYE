@@ -2,10 +2,10 @@ package UI;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import Sim.Components.Radar;
 import Sim.Entity;
@@ -24,7 +24,7 @@ public class HierarchyView extends JPanel {
 
     public HierarchyView() {
 
-        setBackground(Color.DARK_GRAY);
+        setBackground(UITheme.PANEL_BG);
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int width = (int) (screen.width * 0.21875);
@@ -39,7 +39,7 @@ public class HierarchyView extends JPanel {
 
         JLabel title = new JLabel("TARGET HIERARCHY");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setForeground(Color.WHITE);
+        title.setForeground(UITheme.TITLE);
         title.setFont(title.getFont().deriveFont(Font.BOLD,35f));
 
         topContainer.add(title);
@@ -60,7 +60,7 @@ public class HierarchyView extends JPanel {
 
         description.setAlignmentX(Component.CENTER_ALIGNMENT);
         description.setHorizontalAlignment(SwingConstants.CENTER);
-        description.setForeground(Color.LIGHT_GRAY);
+        description.setForeground(UITheme.DESCRIPTION);
         description.setFont(description.getFont().deriveFont(Font.PLAIN,18f));
         topContainer.add(description);
         topContainer.add(Box.createVerticalStrut(20));
@@ -74,8 +74,8 @@ public class HierarchyView extends JPanel {
         tree.setRootVisible(true);
         tree.setShowsRootHandles(true);
 
-        tree.setBackground(new Color(70,70,70));
-        tree.setForeground(Color.WHITE);
+        tree.setBackground(UITheme.CARD_BG);
+        tree.setForeground(UITheme.TITLE);
 
         tree.setRowHeight(24);
 
@@ -111,25 +111,25 @@ public class HierarchyView extends JPanel {
 
                 if(text.startsWith("TARGETS")){
 
-                    setForeground(new Color(255,215,0));   // Gold
+                    setForeground(UITheme.TARGETS);   // Gold
                     setFont(base.deriveFont(Font.BOLD,18f));
 
                 }
                 else if(text.startsWith("FRIENDLIES")){
 
-                    setForeground(new Color(90,180,255));
+                    setForeground(UITheme.FRIENDLY);
                     setFont(base.deriveFont(Font.BOLD,18f));
 
                 }
                 else if(text.startsWith("ENEMIES")){
 
-                    setForeground(new Color(255,50,50));
+                    setForeground(UITheme.ENEMY);
                     setFont(base.deriveFont(Font.BOLD,18f));
 
                 }
                 else{
 
-                    setForeground(Color.WHITE);
+                    setForeground(UITheme.TITLE);
                     setFont(base.deriveFont(Font.PLAIN,16f));
 
                 }
@@ -138,8 +138,8 @@ public class HierarchyView extends JPanel {
             }
         };
 
-        renderer.setBackgroundNonSelectionColor(new Color(70,70,70));
-        renderer.setBackgroundSelectionColor(new Color(90,90,90));
+        renderer.setBackgroundNonSelectionColor(UITheme.CARD_BG);
+        renderer.setBackgroundSelectionColor(UITheme.TREE_BG);
 
         renderer.setBorderSelectionColor(null);
 
@@ -151,8 +151,72 @@ public class HierarchyView extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(tree);
 
-        scrollPane.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-        scrollPane.getViewport().setBackground(new Color(70,70,70));
+        scrollPane.setBorder(BorderFactory.createLineBorder(UITheme.BORDER, 1));
+        scrollPane.getViewport().setBackground(UITheme.TREE_BG);
+
+        scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+
+            @Override
+            protected void configureScrollBarColors() {
+                thumbColor = UITheme.SCROLL_THUMB;
+                trackColor = UITheme.SCROLL_TRACK;
+            }
+
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                return createZeroButton();
+            }
+
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                return createZeroButton();
+            }
+
+            private JButton createZeroButton() {
+                JButton button = new JButton();
+                button.setPreferredSize(new Dimension(0,0));
+                button.setMinimumSize(new Dimension(0,0));
+                button.setMaximumSize(new Dimension(0,0));
+                return button;
+            }
+
+            @Override
+            protected Dimension getMinimumThumbSize() {
+                return new Dimension(8, 30);
+            }
+
+            @Override
+            protected void paintThumb(Graphics g,
+                                      JComponent c,
+                                      Rectangle thumbBounds) {
+
+                Graphics2D g2 = (Graphics2D) g.create();
+
+                g2.setRenderingHint(
+                        RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON
+                );
+
+                if(isThumbRollover()){
+                    g2.setColor(UITheme.SCROLL_THUMB_HOVER);
+                }
+                else{
+                    g2.setColor(UITheme.SCROLL_THUMB);
+                }
+
+                g2.fillRoundRect(
+                        thumbBounds.x + 2,
+                        thumbBounds.y + 2,
+                        thumbBounds.width - 4,
+                        thumbBounds.height - 4,
+                        8,
+                        8
+                );
+
+                g2.dispose();
+            }
+        });
+
         topContainer.add(scrollPane);
 
         add(topContainer, BorderLayout.CENTER);
@@ -160,11 +224,12 @@ public class HierarchyView extends JPanel {
         setBorder(BorderFactory.createCompoundBorder(
                 new EmptyBorder(10,10,10,10),
                 BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(Color.GRAY,3),
+                        BorderFactory.createLineBorder(UITheme.BORDER,3),
                         new EmptyBorder(10,10,10,10)
                 )
         ));
     }
+
 
     public void addEntity(Entity e){
 
