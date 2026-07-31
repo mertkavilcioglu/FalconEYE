@@ -400,5 +400,8 @@ public class Radar extends Component {
     public double getElevation(){
         return elevation;
     }
+    public double getHeading(){
+        return heading;
+    }
 
 }

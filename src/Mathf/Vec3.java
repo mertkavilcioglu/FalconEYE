@@ -19,4 +19,8 @@ public class Vec3 {
         return Math.sqrt(dx*dx + dy*dy + dz*dz);
     }
 
+    public double length() {
+        return Math.sqrt(x * x + y * y + z * z);
+    }
+
 }
