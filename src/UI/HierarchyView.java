@@ -5,6 +5,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.tree.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.HashMap;
 
 import Sim.Components.Radar;
@@ -83,6 +86,30 @@ public class HierarchyView extends JPanel {
 
         tree.setFont(tree.getFont().deriveFont(Font.PLAIN,16f));
 
+        tree.addMouseMotionListener(new MouseMotionAdapter() {
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+
+                int row = tree.getRowForLocation(e.getX(), e.getY());
+
+                if(row != hoveredRow){
+                    hoveredRow = row;
+                    tree.repaint();
+                }
+            }
+        });
+
+        tree.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+                hoveredRow = -1;
+                tree.repaint();
+            }
+        });
+
         DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer(){
 
             @Override
@@ -95,59 +122,53 @@ public class HierarchyView extends JPanel {
                     int row,
                     boolean hasFocus){
 
-                super.getTreeCellRendererComponent(
-                        tree,
-                        value,
-                        sel,
-                        expanded,
-                        leaf,
-                        row,
-                        hasFocus);
+                super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
-                DefaultMutableTreeNode node =
-                        (DefaultMutableTreeNode)value;
-
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                 String text = node.getUserObject().toString();
-
                 Font base = getFont();
 
-                if(text.startsWith("TARGETS")){
 
-                    setForeground(UITheme.TARGETS);   // Gold
-                    setFont(base.deriveFont(Font.BOLD,18f));
-
+                if(sel){
+                    setBackgroundSelectionColor(UITheme.TREE_SELECTION);
+                    setBackgroundNonSelectionColor(UITheme.TREE_BG);
                 }
-                else if(text.startsWith("FRIENDLIES")){
-
-                    setForeground(UITheme.FRIENDLY);
-                    setFont(base.deriveFont(Font.BOLD,18f));
-
-                }
-                else if(text.startsWith("ENEMIES")){
-
-                    setForeground(UITheme.ENEMY);
-                    setFont(base.deriveFont(Font.BOLD,18f));
-
+                else if(row == hoveredRow){
+                    setBackgroundNonSelectionColor(UITheme.TREE_HOVER);
                 }
                 else{
+                    setBackgroundNonSelectionColor(UITheme.TREE_BG);
+                }
 
+                if(text.startsWith("TARGETS")){
+                    setForeground(UITheme.TARGETS);
+                    setFont(base.deriveFont(Font.BOLD,18f));
+                }
+                else if(text.startsWith("FRIENDLIES")){
+                    setForeground(UITheme.FRIENDLY);
+                    setFont(base.deriveFont(Font.BOLD,18f));
+                }
+                else if(text.startsWith("ENEMIES")){
+                    setForeground(UITheme.ENEMY);
+                    setFont(base.deriveFont(Font.BOLD,18f));
+                }
+                else{
                     setForeground(UITheme.TITLE);
                     setFont(base.deriveFont(Font.PLAIN,16f));
-
                 }
 
                 return this;
             }
         };
 
-        renderer.setBackgroundNonSelectionColor(UITheme.CARD_BG);
-        renderer.setBackgroundSelectionColor(UITheme.TREE_SELECTION);
+
 
         renderer.setBorderSelectionColor(null);
 
         renderer.setLeafIcon(null);
         renderer.setClosedIcon(null);
         renderer.setOpenIcon(null);
+
 
         tree.setCellRenderer(renderer);
 
@@ -188,26 +209,18 @@ public class HierarchyView extends JPanel {
             }
 
             @Override
-            protected void paintThumb(Graphics g,
-                                      JComponent c,
-                                      Rectangle thumbBounds) {
+            protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
 
                 Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                g2.setRenderingHint(
-                        RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON
-                );
-
-                if(isThumbRollover()){
-                    g2.setColor(UITheme.SCROLL_THUMB_HOVER);
+                if(isThumbRollover()){g2.setColor(UITheme.SCROLL_THUMB_HOVER);
                 }
                 else{
                     g2.setColor(UITheme.SCROLL_THUMB);
                 }
 
-                g2.fillRoundRect(
-                        thumbBounds.x + 2,
+                g2.fillRoundRect(thumbBounds.x + 2,
                         thumbBounds.y + 2,
                         thumbBounds.width - 4,
                         thumbBounds.height - 4,
