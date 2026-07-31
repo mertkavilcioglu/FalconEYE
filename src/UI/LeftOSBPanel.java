@@ -55,7 +55,10 @@ public class LeftOSBPanel extends JPanel {
                         break;
 
                     case 18:
-                        //System.out.println("OSB 18 PRESSED");
+
+                        radar.cycleAzimuth();
+                        updateAzimuth();
+                        //System.out.println("OSB 18 AZIMUTH");
                         break;
 
                     case 17:
@@ -78,7 +81,12 @@ public class LeftOSBPanel extends JPanel {
         }
     }
 
+    private void updateAzimuth(){
 
+        mfdScreen.updateAzimuthLabel(radar.getAzimuth());
+
+        mfdScreen.getMfdCanvas().repaint();
+    }
 
     private void updateRange(){
 

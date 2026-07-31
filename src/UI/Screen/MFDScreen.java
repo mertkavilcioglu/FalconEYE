@@ -97,4 +97,10 @@ public class MFDScreen extends JPanel {
         overlayWest.setRange(range);
 
     }
+
+    public void updateAzimuthLabel(double azimuth){
+
+        overlayWest.setAzimuth((int) azimuth);
+
+    }
 }

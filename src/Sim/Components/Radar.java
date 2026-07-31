@@ -10,8 +10,8 @@ import java.util.Iterator;
 
 
 public class Radar extends Component {
-    private int range = 74080; // 40NM
 
+    private int range = 74080; // 40NM
     private final int[] rangeOptions = {
             9260,      // 5 NM
             18520,     // 10 NM
@@ -22,6 +22,8 @@ public class Radar extends Component {
     };
 
     private double azimuth = 120;
+    private final int[] azimuthOptions = {120, 60, 20};
+
     private double elevation = 4;
 
     private double heading = 0; // horizontal for azimuth
@@ -328,6 +330,27 @@ public class Radar extends Component {
     public int getRangeNM(){
 
         return range / 1852;
+    }
+
+    public void cycleAzimuth(){
+
+        int index = 0;
+
+        for(int i = 0; i < azimuthOptions.length; i++){
+
+            if(azimuth == azimuthOptions[i]){
+                index = i;
+                break;
+            }
+        }
+
+        index++;
+
+        if(index >= azimuthOptions.length){
+            index = 0;
+        }
+
+        azimuth = azimuthOptions[index];
     }
 
 
