@@ -16,13 +16,11 @@ public class LeftOverlayPanel extends JPanel {
 
         setLayout(new GridLayout(5, 1));
 
-        JPanel slot1 = new JPanel(new GridLayout(2, 1));
+        JPanel slot1 = new JPanel(new BorderLayout());
         slot1.setOpaque(false);
 
-        slot1.add(new JLabel());
-
         TrianglePanel upTriangle = new TrianglePanel(true);
-        slot1.add(upTriangle);
+        slot1.add(upTriangle, BorderLayout.CENTER);
 
         add(slot1);
 

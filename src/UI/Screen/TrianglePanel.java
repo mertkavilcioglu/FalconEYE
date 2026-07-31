@@ -34,7 +34,7 @@ public class TrianglePanel extends JPanel {
         int drawY;
 
         if (up)
-            drawY = cy + offset;
+            drawY = cy + offset +15;
         else
             drawY = cy - offset + 1;
 
