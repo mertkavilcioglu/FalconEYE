@@ -18,10 +18,7 @@ public class MFDCanvas extends JPanel {
     private double scale;
     private int overlayThickness = 0;
 
-    private double contactLeftMargin = 0.12;
-    private double contactRightMargin = 0.12;
-    private double contactTopMargin = 0.10;
-    private double contactBottomMargin = 0.14;
+    private int selectedEntityId = -1;
 
 
     public MFDCanvas(World world){
@@ -82,6 +79,10 @@ public class MFDCanvas extends JPanel {
                     contact.getPredictedVel(),
                     world.getEntities().get(contact.getTargetID()).getIff(),
                     screenX, screenY, radius);
+        }
+
+        if(contact.getTargetID() == selectedEntityId){
+            drawSelectionBracket(g2, screenX, screenY);
         }
     }
 
@@ -464,7 +465,31 @@ public class MFDCanvas extends JPanel {
         g2.setStroke(oldStroke);
     }
 
+    private void drawSelectionBracket(Graphics2D g2, int centerX, int centerY){
+
+        int gap = radius-2;
+        int height = radius + 4;
+
+        Stroke old = g2.getStroke();
+
+        g2.setColor(Color.LIGHT_GRAY);
+        g2.setStroke(new BasicStroke(2f));
+
+        g2.drawLine(centerX - gap, centerY - height / 2, centerX - gap, centerY + height / 2);
+        g2.drawLine(centerX + gap, centerY - height / 2, centerX + gap, centerY + height / 2);
+
+        g2.setStroke(old);
+    }
+
     public void refreshRadarDisplay(){
         repaint();
+    }
+
+    public void setSelectedEntityId(int id){
+        selectedEntityId = id;
+    }
+
+    public int getSelectedEntityId(){
+        return selectedEntityId;
     }
 }

@@ -22,6 +22,7 @@ public class HierarchyView extends JPanel {
     private final DefaultMutableTreeNode rootNode;
     private final DefaultTreeModel treeModel;
     private final JTree tree;
+    private SelectionListener selectionListener;
 
     private HashMap<Integer, TargetTreeNodes> nodeMap = new HashMap<>();
 
@@ -98,6 +99,25 @@ public class HierarchyView extends JPanel {
                     tree.repaint();
                 }
             }
+        });
+
+        tree.addTreeSelectionListener(e -> {
+
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+
+
+            if(node == null)
+                return;
+
+            int id = findEntityId(node);
+
+            if(id == -1)
+                return;
+
+            if(selectionListener != null){
+                selectionListener.onEntitySelected(id);
+            }
+
         });
 
         tree.addMouseListener(new MouseAdapter() {
@@ -528,5 +548,28 @@ public class HierarchyView extends JPanel {
 
     private double metersToFeet(double meters){
         return meters * 3.28084;
+    }
+
+    public interface SelectionListener{
+        void onEntitySelected(int entityId);
+    }
+
+    public void setSelectionListener(SelectionListener listener){
+        this.selectionListener = listener;
+    }
+
+    private int findEntityId(DefaultMutableTreeNode node){
+
+        while(node != null){
+
+            int id = extractEntityId(node.getUserObject().toString());
+
+            if(id != -1)
+                return id;
+
+            node = (DefaultMutableTreeNode) node.getParent();
+        }
+
+        return -1;
     }
 }

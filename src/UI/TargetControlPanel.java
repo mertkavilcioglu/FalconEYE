@@ -24,10 +24,6 @@ public class TargetControlPanel extends JPanel {
         topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
         topContainer.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        //---------------------------------------
-        // TITLE
-        //---------------------------------------
-
         JLabel title = new JLabel("CREATE TARGETS");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setForeground(UITheme.TITLE);
@@ -36,19 +32,12 @@ public class TargetControlPanel extends JPanel {
         topContainer.add(title);
         topContainer.add(Box.createVerticalStrut(10));
 
-        //---------------------------------------
-        // SEPARATOR
-        //---------------------------------------
 
         JSeparator separator = new JSeparator();
         separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
 
         topContainer.add(separator);
         topContainer.add(Box.createVerticalStrut(12));
-
-        //---------------------------------------
-        // DESCRIPTION
-        //---------------------------------------
 
         JLabel description = new JLabel(
                 "<html><div style='text-align:center;'>"
@@ -65,48 +54,31 @@ public class TargetControlPanel extends JPanel {
         topContainer.add(description);
         topContainer.add(Box.createVerticalStrut(20));
 
-        //---------------------------------------
-        // TWO CARDS
-        //---------------------------------------
-
         JPanel cards = new JPanel(new GridLayout(1, 2, 15, 0));
         cards.setOpaque(false);
 
-        friendlyPanel = new SpawnColumnPanel(
-                "FRIENDLY",
-                UITheme.FRIENDLY
-        );
-
-        enemyPanel = new SpawnColumnPanel(
-                "ENEMY",
-                UITheme.ENEMY
-        );
+        friendlyPanel = new SpawnColumnPanel("FRIENDLY", UITheme.FRIENDLY);
+        enemyPanel = new SpawnColumnPanel("ENEMY", UITheme.ENEMY);
 
         JPanel friendlyCard = createCard(friendlyPanel);
         JPanel enemyCard = createCard(enemyPanel);
 
         cards.add(friendlyCard);
         cards.add(enemyCard);
-
         topContainer.add(cards);
 
         add(topContainer, BorderLayout.NORTH);
 
         setBorder(BorderFactory.createCompoundBorder(
-                new EmptyBorder(10, 10, 10, 10),           // dış offset
+                new EmptyBorder(10, 10, 10, 10),
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createLineBorder(UITheme.BORDER, 3),
-                        new EmptyBorder(10, 10, 10, 10) // iç padding
+                        new EmptyBorder(10, 10, 10, 10)
                 )
         ));
 
-        ImageIcon friendlyIcon = new ImageIcon(
-                getClass().getResource("/Assets/nato_friendly_air.png")
-        );
-
-        ImageIcon enemyIcon = new ImageIcon(
-                getClass().getResource("/Assets/nato_enemy_air.png")
-        );
+        ImageIcon friendlyIcon = new ImageIcon(getClass().getResource("/Assets/nato_friendly_air.png"));
+        ImageIcon enemyIcon = new ImageIcon(getClass().getResource("/Assets/nato_enemy_air.png"));
 
         friendlyPanel.setIcon(friendlyIcon);
         enemyPanel.setIcon(enemyIcon);
@@ -117,16 +89,13 @@ public class TargetControlPanel extends JPanel {
     private JPanel createCard(JPanel content) {
 
         JPanel card = new JPanel(new BorderLayout());
-
         card.setBackground(UITheme.CARD_BG);
 
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(UITheme.BORDER),
-                new EmptyBorder(10, 10, 10, 10)
-        ));
+                new EmptyBorder(10, 10, 10, 10)));
 
         card.add(content);
-
         return card;
     }
 

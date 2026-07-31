@@ -21,11 +21,8 @@ public class SpawnColumnPanel extends JPanel {
 
         setOpaque(false);
         setBorder(new EmptyBorder(15,15,15,15));
-
         setLayout(new BorderLayout(0,15));
 
-
-        //---------------- TOP ----------------
 
         JPanel top = new JPanel();
         top.setOpaque(false);
@@ -40,24 +37,19 @@ public class SpawnColumnPanel extends JPanel {
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         Font f = titleLabel.getFont();
-        titleLabel.setFont(
-                f.deriveFont(Font.BOLD, 22f)
-        );
+        titleLabel.setFont(f.deriveFont(Font.BOLD, 22f));
 
         top.add(iconLabel);
         top.add(Box.createVerticalStrut(10));
         top.add(titleLabel);
 
 
-        //---------------- BUTTONS ----------------
 
         JPanel buttons = new JPanel(new GridLayout(3,1,0,20));
         buttons.setOpaque(false);
 
         createButton = new ToolButton("Create Single");
-
         formationButton = new ToolButton("Create in Formation");
-
         deleteButton = new ToolButton("Delete All", true);
 
         deleteButton.setBackground(new Color(120,35,35));

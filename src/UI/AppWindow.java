@@ -19,6 +19,13 @@ public class AppWindow extends JFrame {
         targetControlPanel = new TargetControlPanel();
         mfdView = new MFDView(app);
 
+        hierarchyView.setSelectionListener(entityId -> {
+
+            mfdView.getRadarScreen().getMfdCanvas().setSelectedEntityId(entityId);
+
+            mfdView.getRadarScreen().getMfdCanvas().refreshRadarDisplay();
+        });
+
 
         Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         setBounds(bounds);

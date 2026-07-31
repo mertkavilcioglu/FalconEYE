@@ -54,11 +54,8 @@ public class ToolButton extends JButton {
         });
 
         setFont(getFont().deriveFont(Font.BOLD,15f));
-
         setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
         setPreferredSize(new Dimension(0, 50));
     }
 }
