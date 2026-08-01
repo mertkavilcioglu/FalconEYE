@@ -64,6 +64,38 @@ public class AppWindow extends JFrame {
         });
 
 
+        // CREATE FORMATION BUTTONS
+        targetControlPanel.getFriendlyPanel().getCloseFormationButton().addActionListener(e -> {
+            app.getWorld().createFormation(Entity.IFF.FRIEND, World.SpawnRange.CLOSE);
+            refreshUI();
+        });
+
+        targetControlPanel.getFriendlyPanel().getMediumFormationButton().addActionListener(e -> {
+            app.getWorld().createFormation(Entity.IFF.FRIEND, World.SpawnRange.MEDIUM);
+            refreshUI();
+        });
+
+        targetControlPanel.getFriendlyPanel().getLongFormationButton().addActionListener(e -> {
+            app.getWorld().createFormation(Entity.IFF.FRIEND, World.SpawnRange.LONG);
+            refreshUI();
+        });
+
+        targetControlPanel.getEnemyPanel().getCloseFormationButton().addActionListener(e -> {
+            app.getWorld().createFormation(Entity.IFF.HOSTILE, World.SpawnRange.CLOSE);
+            refreshUI();
+        });
+
+        targetControlPanel.getEnemyPanel().getMediumFormationButton().addActionListener(e -> {
+            app.getWorld().createFormation(Entity.IFF.HOSTILE, World.SpawnRange.MEDIUM);
+            refreshUI();
+        });
+
+        targetControlPanel.getEnemyPanel().getLongFormationButton().addActionListener(e -> {
+            app.getWorld().createFormation(Entity.IFF.HOSTILE, World.SpawnRange.LONG);
+            refreshUI();
+        });
+
+
 
 
 

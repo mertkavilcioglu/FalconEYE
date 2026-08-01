@@ -65,10 +65,8 @@ public class LeftOverlayPanel extends JPanel {
         add(slot5);
     }
 
-    //--------------------------------------------------
-    // UPDATE FUNCTIONS
-    //--------------------------------------------------
 
+    // UPDATE FUNCTIONS
     public void setRange(int range) {
 
         rangeLabel.setText(String.valueOf(range));

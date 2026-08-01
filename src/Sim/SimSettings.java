@@ -26,4 +26,5 @@ public final class SimSettings {
     public static final double SPAWN_LONG_ALTITUDE_OFFSET_FT = 8000.0;
     public static final double SPAWN_MIN_SPEED_KT = 220.0;
     public static final double SPAWN_MAX_SPEED_KT = 520.0;
+    public static final double FORMATION_SPACING_NM = 1.5;
 }

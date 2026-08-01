@@ -176,6 +176,42 @@ public class World {
         return createEntity(iff, new Vec3(x, y, z), velocity);
     }
 
+    public void createFormation(Entity.IFF iff, SpawnRange range){
+
+        int[] possibleSizes = {2, 4};
+        int formationSize = possibleSizes[random.nextInt(possibleSizes.length)];
+
+        Entity previous = createRandomEntity(iff, range);
+
+        Velocity previousVelocity = previous.getComponent(Velocity.class);
+        Vec3 vel = previousVelocity.getVelocity();
+
+        double speed = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
+
+        double dirX = vel.x / speed;
+        double dirY = vel.y / speed;
+
+        double perpX = -dirY;
+        double perpY = dirX;
+
+        double spacing = nmToMeters(FORMATION_SPACING_NM);
+
+        for (int i = 1; i < formationSize; i++) {
+
+            Transform previousTransform = previous.getComponent(Transform.class);
+
+            double x = previousTransform.position.x + perpX * spacing;
+            double y = previousTransform.position.y + perpY * spacing;
+            double z = previousTransform.position.z;
+
+            previous = createEntity(
+                    iff,
+                    new Vec3(x, y, z),
+                    new Vec3(vel.x, vel.y, vel.z)
+            );
+        }
+    }
+
     public HashMap<Integer, Entity> getEntities() {
         return entities;
     }
