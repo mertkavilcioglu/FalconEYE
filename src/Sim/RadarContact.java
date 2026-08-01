@@ -39,7 +39,7 @@ public class RadarContact {
                 vel.getVelocity().y,
                 vel.getVelocity().z);
 
-        confidence = 1;
+        confidence = 0;
         displayState = DisplayState.CONTACT;
         lastDetectionTime = System.currentTimeMillis();
         detectedThisSweep = true;

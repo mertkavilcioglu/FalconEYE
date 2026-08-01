@@ -19,7 +19,7 @@ public class World {
     private HashMap<Integer, Entity> entities = new HashMap<>();
     private int entityId = 1;
 
-    public static final double START_ALTITUDE = 4572.0; // 10.000 feet
+    public static final double START_ALTITUDE = 4572.0; // 15.000 feet
     public static final double WORLD_ORIGIN = 100000.0;
     private Entity player;
 
