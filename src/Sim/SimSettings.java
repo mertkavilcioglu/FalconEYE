@@ -10,16 +10,20 @@ public final class SimSettings {
 
 
     // Entity Spawn
-    public static final double SPAWN_BEARING_LIMIT_DEG = 70.0;
-    public static final double SPAWN_MIN_RANGE_NM = 10.0;
-    public static final double SPAWN_MAX_RANGE_NM = 100.0;
+    public static final double SPAWN_BEARING_LIMIT_DEG = 50.0;
+    public static final double SPAWN_CLOSE_MIN_RANGE_NM = 10.0;
+    public static final double SPAWN_CLOSE_MAX_RANGE_NM = 25.0;
+    public static final double SPAWN_MEDIUM_MIN_RANGE_NM = 25.0;
+    public static final double SPAWN_MEDIUM_MAX_RANGE_NM = 50.0;
+    public static final double SPAWN_LONG_MIN_RANGE_NM = 50.0;
+    public static final double SPAWN_LONG_MAX_RANGE_NM = 100.0;
     public static final double SPAWN_CLOSE_RANGE_NM = 25.0;
     public static final double SPAWN_MEDIUM_RANGE_NM = 50.0;
     public static final double SPAWN_MIN_ALTITUDE_FT = 8000.0;
     public static final double SPAWN_MAX_ALTITUDE_FT = 30000.0;
-    public static final double SPAWN_CLOSE_ALTITUDE_OFFSET_FT = 3000.0;
-    public static final double SPAWN_MEDIUM_ALTITUDE_OFFSET_FT = 7000.0;
-    public static final double SPAWN_FAR_ALTITUDE_OFFSET_FT = 15000.0;
+    public static final double SPAWN_CLOSE_ALTITUDE_OFFSET_FT = 1000.0;
+    public static final double SPAWN_MEDIUM_ALTITUDE_OFFSET_FT = 2000.0;
+    public static final double SPAWN_LONG_ALTITUDE_OFFSET_FT = 3000.0;
     public static final double SPAWN_MIN_SPEED_KT = 220.0;
     public static final double SPAWN_MAX_SPEED_KT = 520.0;
 }

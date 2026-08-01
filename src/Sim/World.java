@@ -6,10 +6,10 @@ import Sim.Components.Radar;
 import Sim.Components.Rigidbody;
 import Sim.Components.Transform;
 import Sim.Components.Velocity;
-import UI.Screen.MFDCanvas;
+
+import static Mathf.UnitConverter.nmToMeters;
 import static Sim.SimSettings.*;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -25,13 +25,20 @@ public class World {
 
     private final Random random = new Random();
 
+
+    public enum SpawnRange {
+        CLOSE,
+        MEDIUM,
+        LONG
+    }
+
     public World(EYEApp app){
         this.app = app;
 
-        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 120000.0, 3048.0), new Vec3(0.0, 270.0, 0.0));
-        createEntity(Entity.IFF.FRIEND, new Vec3(100000.0, 173000.0, 3048.0), new Vec3(0.0, -280.0, 0.0));
-        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 176000.0, 3048.0), new Vec3(-180.0, -150.0, 0.0));
-        createEntity(Entity.IFF.HOSTILE, new Vec3(140000.0, 140000.0, 3048.0), new Vec3(-180.0, -150.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 120000.0, START_ALTITUDE), new Vec3(0.0, 270.0, 0.0));
+        createEntity(Entity.IFF.FRIEND, new Vec3(100000.0, 173000.0, START_ALTITUDE), new Vec3(0.0, -280.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 176000.0, START_ALTITUDE), new Vec3(-180.0, -150.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(140000.0, 140000.0, START_ALTITUDE-500), new Vec3(-180.0, -150.0, 0.0));
         createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 100000.0, 85000.0), new Vec3(-180.0, -150.0, 0.0));
 
 
@@ -91,7 +98,7 @@ public class World {
         );
     }
 
-    public Entity createRandomEntity(Entity.IFF iff){
+    public Entity createRandomEntity(Entity.IFF iff, SpawnRange range){
 
         Transform playerTransform = player.getComponent(Transform.class);
         Radar radar = player.getComponent(Radar.class);
@@ -99,8 +106,33 @@ public class World {
 
         // Position
         double bearingDeg = -SPAWN_BEARING_LIMIT_DEG + random.nextDouble() * (SPAWN_BEARING_LIMIT_DEG * 2.0);
-        double rangeNM = SPAWN_MIN_RANGE_NM + random.nextDouble() * (SPAWN_MAX_RANGE_NM - SPAWN_MIN_RANGE_NM);
-        double rangeMeters = rangeNM * 1852.0;
+        double minRangeNM;
+        double maxRangeNM;
+
+        switch (range){
+
+            case CLOSE:
+                minRangeNM = SPAWN_CLOSE_MIN_RANGE_NM;
+                maxRangeNM = SPAWN_CLOSE_MAX_RANGE_NM;
+                break;
+
+            case MEDIUM:
+                minRangeNM = SPAWN_MEDIUM_MIN_RANGE_NM;
+                maxRangeNM = SPAWN_MEDIUM_MAX_RANGE_NM;
+                break;
+
+            case LONG:
+            default:
+                minRangeNM = SPAWN_LONG_MIN_RANGE_NM;
+                maxRangeNM = SPAWN_LONG_MAX_RANGE_NM;
+                break;
+        }
+
+        double rangeNM =
+                minRangeNM +
+                        random.nextDouble() * (maxRangeNM - minRangeNM);
+
+        double rangeMeters = nmToMeters(rangeNM);
 
         double worldBearing = radar.getHeading() + bearingDeg;
         double bearingRad = Math.toRadians(worldBearing);
@@ -120,7 +152,7 @@ public class World {
             altitudeOffsetFt = -SPAWN_MEDIUM_ALTITUDE_OFFSET_FT + random.nextDouble() * (SPAWN_MEDIUM_ALTITUDE_OFFSET_FT * 2.0);
         }
         else{
-            altitudeOffsetFt = -SPAWN_FAR_ALTITUDE_OFFSET_FT + random.nextDouble() * (SPAWN_FAR_ALTITUDE_OFFSET_FT * 2.0);
+            altitudeOffsetFt = -SPAWN_LONG_ALTITUDE_OFFSET_FT + random.nextDouble() * (SPAWN_LONG_ALTITUDE_OFFSET_FT * 2.0);
         }
 
         double altitudeFt = playerAltitudeFt + altitudeOffsetFt;

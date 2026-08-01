@@ -5,6 +5,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import static Sim.SimSettings.*;
 
 public class SpawnColumnPanel extends JPanel {
 
@@ -69,8 +70,10 @@ public class SpawnColumnPanel extends JPanel {
         int gapBetweenSections = 35; //25
 
         content.add(createRangeSection(
-                "CLOSE RANGE ",
-                "(10 - 40 NM)",
+                "CLOSE RANGE",
+                formatRange(
+                        SPAWN_CLOSE_MIN_RANGE_NM,
+                        SPAWN_CLOSE_MAX_RANGE_NM),
                 closeSingleButton,
                 closeFormationButton));
 
@@ -78,7 +81,9 @@ public class SpawnColumnPanel extends JPanel {
 
         content.add(createRangeSection(
                 "MEDIUM RANGE",
-                "(40 - 70 NM)",
+                formatRange(
+                        SPAWN_MEDIUM_MIN_RANGE_NM,
+                        SPAWN_MEDIUM_MAX_RANGE_NM),
                 mediumSingleButton,
                 mediumFormationButton));
 
@@ -86,7 +91,9 @@ public class SpawnColumnPanel extends JPanel {
 
         content.add(createRangeSection(
                 "LONG RANGE",
-                "(70 - 100 NM)",
+                formatRange(
+                        SPAWN_LONG_MIN_RANGE_NM,
+                        SPAWN_LONG_MAX_RANGE_NM),
                 longSingleButton,
                 longFormationButton));
 
@@ -213,5 +220,9 @@ public class SpawnColumnPanel extends JPanel {
 
         iconLabel.setIcon(new ImageIcon(img));
         iconLabel.setText("");
+    }
+
+    private String formatRange(double min, double max){
+        return String.format("(%.0f - %.0f NM)", min, max);
     }
 }
