@@ -27,6 +27,7 @@ public class Radar extends Component {
 
     private double beamWidth = 2.0;
     private double beamOffset = -30.0;
+    private double previousBeamOffset = beamOffset;
     private double beamSpeed = 60.0;
     private boolean sweepingRight = true;
 
@@ -92,6 +93,8 @@ public class Radar extends Component {
 
     private void updateBeam(double deltaSeconds){
 
+        previousBeamOffset = beamOffset;
+
         if(sweepingRight){
             beamOffset += beamSpeed * deltaSeconds;
 
@@ -151,10 +154,19 @@ public class Radar extends Component {
     public boolean isInAzimuth(Vec3 relativePos){
 
         double bearing = getBearing(relativePos);
-        double currentBeamHeading = heading + beamOffset;
-        double angleDiff = getAngleDifference(bearing, currentBeamHeading);
 
-        return Math.abs(angleDiff) <= beamWidth / 2.0;
+        double previousHeading = heading + previousBeamOffset;
+        double currentHeading = heading + beamOffset;
+
+        double beamTravel =
+                Math.abs(getAngleDifference(currentHeading, previousHeading));
+
+        double effectiveBeamWidth = beamWidth + beamTravel;
+
+        double angleDiff =
+                getAngleDifference(bearing, currentHeading);
+
+        return Math.abs(angleDiff) <= effectiveBeamWidth / 2.0;
     }
 
 
