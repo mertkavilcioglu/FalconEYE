@@ -35,7 +35,7 @@ public class OSBPanel extends JPanel {
                     btn.setFocusable(false);
                 }
                 else{ // OSBs
-                    btn = new OSBButton(String.valueOf(buttonNumbers[buttonIndex]));
+                    btn = new OSBButton("");
                     OSBList.put(buttonNumbers[buttonIndex], btn);
                     buttonIndex++;
                 }
@@ -60,7 +60,7 @@ public class OSBPanel extends JPanel {
                 }
 
                 JPanel wrapper = new JPanel(new GridBagLayout());
-                JButton btn = new OSBButton(String.valueOf(buttonNumbers[buttonIndex]));
+                JButton btn = new OSBButton("");
                 OSBList.put(buttonNumbers[buttonIndex], btn);
                 buttonIndex++;
 

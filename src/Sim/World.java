@@ -1,16 +1,248 @@
 package Sim;
 
 import App.EYEApp;
+import Mathf.Vec3;
+import Sim.Components.Radar;
+import Sim.Components.Rigidbody;
+import Sim.Components.Transform;
+import Sim.Components.Velocity;
+
+import static Mathf.UnitConverter.nmToMeters;
+import static Sim.SimSettings.*;
+
+import java.util.HashMap;
+import java.util.Random;
 
 public class World {
 
     private EYEApp app;
+    private HashMap<Integer, Entity> entities = new HashMap<>();
+    private int entityId = 1;
+    private Entity player;
+
+    private final Random random = new Random();
+
+
+    public enum SpawnRange {
+        CLOSE,
+        MEDIUM,
+        LONG
+    }
 
     public World(EYEApp app){
         this.app = app;
+        createDemoScenario();
+        player = createPlayer();
     }
 
     public void update(int delta){
-        // Update all entities in entity List hash, then they will update their components
+        for(Entity e : entities.values()){
+            e.update(delta);
+        }
     }
+
+    public Entity createEntity(Entity.IFF iff, Vec3 pos, Vec3 velocity){
+        Entity e = new Entity(this, iff);
+
+        e.addComponent(new Transform(pos));
+        e.addComponent(new Velocity(velocity));
+        e.addComponent(new Rigidbody());
+
+        e.setId(entityId++);
+        entities.put(e.getId(), e);
+        return e;
+    }
+
+    public Entity createPlayer(){
+        Entity e = new Entity(this, Entity.IFF.FRIEND);
+
+        Vec3 pos = new Vec3(WORLD_ORIGIN, WORLD_ORIGIN, START_ALTITUDE);
+        e.addComponent(new Transform(pos));
+
+        Vec3 vel = new Vec3(0.0, 180.0, 0.0);
+        e.addComponent(new Velocity(vel));
+
+        e.addComponent(new Rigidbody());
+
+        Radar radar = new Radar();
+        e.addComponent(radar);
+
+        e.setId(entityId++);
+        entities.put(e.getId(), e);
+        return e;
+    }
+
+    public void removeEntity(int id){
+
+        Entity e = entities.remove(id);
+        if(e != null){
+            e.setActive(false);
+        }
+    }
+
+    public void removeAllEntities(Entity.IFF iff){
+
+        entities.values().removeIf(entity ->
+                entity != player &&
+                        entity.getIff() == iff
+        );
+    }
+
+    public Entity createRandomEntity(Entity.IFF iff, SpawnRange range){
+
+        Transform playerTransform = player.getComponent(Transform.class);
+        Radar radar = player.getComponent(Radar.class);
+
+
+        // Position
+        double bearingDeg = -SPAWN_BEARING_LIMIT_DEG + random.nextDouble() * (SPAWN_BEARING_LIMIT_DEG * 2.0);
+        double minRangeNM;
+        double maxRangeNM;
+
+        switch (range){
+
+            case CLOSE:
+                minRangeNM = SPAWN_CLOSE_MIN_RANGE_NM;
+                maxRangeNM = SPAWN_CLOSE_MAX_RANGE_NM;
+                break;
+
+            case MEDIUM:
+                minRangeNM = SPAWN_MEDIUM_MIN_RANGE_NM;
+                maxRangeNM = SPAWN_MEDIUM_MAX_RANGE_NM;
+                break;
+
+            case LONG:
+            default:
+                minRangeNM = SPAWN_LONG_MIN_RANGE_NM;
+                maxRangeNM = SPAWN_LONG_MAX_RANGE_NM;
+                break;
+        }
+
+        double rangeNM =
+                minRangeNM +
+                        random.nextDouble() * (maxRangeNM - minRangeNM);
+
+        double rangeMeters = nmToMeters(rangeNM);
+
+        double worldBearing = radar.getHeading() + bearingDeg;
+        double bearingRad = Math.toRadians(worldBearing);
+
+        double x = playerTransform.position.x + Math.sin(bearingRad) * rangeMeters;
+        double y = playerTransform.position.y + Math.cos(bearingRad) * rangeMeters;
+
+
+        // Altitude
+        double playerAltitudeFt = playerTransform.position.z * 3.28084;
+        double altitudeOffsetFt;
+
+        if(rangeNM < SPAWN_CLOSE_RANGE_NM){
+            altitudeOffsetFt = -SPAWN_CLOSE_ALTITUDE_OFFSET_FT + random.nextDouble() * (SPAWN_CLOSE_ALTITUDE_OFFSET_FT * 2.0);
+        }
+        else if(rangeNM < SPAWN_MEDIUM_RANGE_NM){
+            altitudeOffsetFt = -SPAWN_MEDIUM_ALTITUDE_OFFSET_FT + random.nextDouble() * (SPAWN_MEDIUM_ALTITUDE_OFFSET_FT * 2.0);
+        }
+        else{
+            altitudeOffsetFt = -SPAWN_LONG_ALTITUDE_OFFSET_FT + random.nextDouble() * (SPAWN_LONG_ALTITUDE_OFFSET_FT * 2.0);
+        }
+
+        double altitudeFt = playerAltitudeFt + altitudeOffsetFt;
+        altitudeFt = Math.max(SPAWN_MIN_ALTITUDE_FT, Math.min(SPAWN_MAX_ALTITUDE_FT, altitudeFt));
+
+        double z = altitudeFt / 3.28084;
+
+
+        // Velocity
+        double headingDeg = random.nextDouble() * 360.0;
+        double speedKt = SPAWN_MIN_SPEED_KT + random.nextDouble() * (SPAWN_MAX_SPEED_KT - SPAWN_MIN_SPEED_KT);
+
+        double speedMS = speedKt / 1.94384;
+
+        double headingRad = Math.toRadians(headingDeg);
+
+        Vec3 velocity = new Vec3(Math.sin(headingRad) * speedMS, Math.cos(headingRad) * speedMS, 0.0);
+
+        // Create
+        return createEntity(iff, new Vec3(x, y, z), velocity);
+    }
+
+    public void createFormation(Entity.IFF iff, SpawnRange range){
+
+        int[] possibleSizes = {2, 4};
+        int formationSize = possibleSizes[random.nextInt(possibleSizes.length)];
+
+        Entity previous = createRandomEntity(iff, range);
+
+        Velocity previousVelocity = previous.getComponent(Velocity.class);
+        Vec3 vel = previousVelocity.getVelocity();
+
+        double speed = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
+
+        double dirX = vel.x / speed;
+        double dirY = vel.y / speed;
+
+        double perpX = -dirY;
+        double perpY = dirX;
+
+        double spacing = nmToMeters(FORMATION_SPACING_NM);
+
+        for (int i = 1; i < formationSize; i++) {
+
+            Transform previousTransform = previous.getComponent(Transform.class);
+
+            double x = previousTransform.position.x + perpX * spacing;
+            double y = previousTransform.position.y + perpY * spacing;
+            double z = previousTransform.position.z;
+
+            previous = createEntity(
+                    iff,
+                    new Vec3(x, y, z),
+                    new Vec3(vel.x, vel.y, vel.z)
+            );
+        }
+    }
+
+    public HashMap<Integer, Entity> getEntities() {
+        return entities;
+    }
+
+    public Entity getPlayer(){
+        return player;
+    }
+
+    public void createDemoScenario(){
+
+        // ENEMIES
+
+        // Enemy 4-ship formation (upper-left) -> South-East
+        createEntity(Entity.IFF.HOSTILE, new Vec3(70000.0, 165000.0, START_ALTITUDE + 1200), new Vec3(180.0, -180.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(73000.0, 168000.0, START_ALTITUDE + 1200), new Vec3(180.0, -180.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(76000.0, 171000.0, START_ALTITUDE + 1200), new Vec3(180.0, -180.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(79000.0, 174000.0, START_ALTITUDE + 1200), new Vec3(180.0, -180.0, 0.0));
+
+        // Enemy pair (upper-right) -> West
+        createEntity(Entity.IFF.HOSTILE, new Vec3(129000.0, 171000.0, START_ALTITUDE + 600), new Vec3(-260.0, 0.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(133000.0, 168000.0, START_ALTITUDE + 600), new Vec3(-260.0, 0.0, 0.0));
+
+        // Enemy pair (center) -> South (towards player)
+        createEntity(Entity.IFF.HOSTILE, new Vec3(98000.0, 169000.0, START_ALTITUDE + 300), new Vec3(0.0, -260.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(102000.0, 169000.0, START_ALTITUDE + 300), new Vec3(0.0, -260.0, 0.0));
+
+
+        // FRIENDLIES
+
+        // Single friendly (bottom-left) -> South-West
+        createEntity(Entity.IFF.FRIEND, new Vec3(88000.0, 126000.0, START_ALTITUDE - 500), new Vec3(-180.0, -180.0, 0.0));
+
+        // Friendly 4-ship formation (bottom-center) -> North
+        createEntity(Entity.IFF.FRIEND, new Vec3(94000.0, 129000.0, START_ALTITUDE - 300), new Vec3(0.0, 260.0, 0.0));
+        createEntity(Entity.IFF.FRIEND, new Vec3(98000.0, 129000.0, START_ALTITUDE - 300), new Vec3(0.0, 260.0, 0.0));
+        createEntity(Entity.IFF.FRIEND, new Vec3(102000.0, 129000.0, START_ALTITUDE - 300), new Vec3(0.0, 260.0, 0.0));
+        createEntity(Entity.IFF.FRIEND, new Vec3(106000.0, 129000.0, START_ALTITUDE - 300), new Vec3(0.0, 260.0, 0.0));
+
+        // Friendly pair (bottom-right) -> South
+        createEntity(Entity.IFF.FRIEND, new Vec3(113000.0, 131000.0, START_ALTITUDE), new Vec3(0.0, -240.0, 0.0));
+        createEntity(Entity.IFF.FRIEND, new Vec3(117000.0, 129500.0, START_ALTITUDE), new Vec3(0.0, -240.0, 0.0));
+    }
+
+
 }
