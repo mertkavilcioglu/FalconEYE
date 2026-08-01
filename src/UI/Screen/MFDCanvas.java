@@ -99,18 +99,40 @@ public class MFDCanvas extends JPanel {
     }
 
     private void drawTrack(Graphics2D g2, Velocity vel, int centerX, int centerY, int radius) {
+
         double heading = getHeading(vel);
 
         Graphics2D gRot = (Graphics2D) g2.create();
         gRot.rotate(Math.toRadians(heading), centerX, centerY);
 
         gRot.setColor(Color.YELLOW);
-        gRot.fillRect(centerX - radius / 2, centerY - radius / 2, radius, radius);
-        drawTrackLine(g2, Entity.IFF.SUSPECT, heading, centerX,centerY);
+
+        gRot.fillRect(
+                centerX - radius / 2,
+                centerY - radius / 2,
+                radius,
+                radius
+        );
+
+        int lineStart = radius / 2;
+        int lineLength = radius * 2 / 3;
+
+        gRot.drawLine(
+                centerX,
+                centerY - lineStart,
+                centerX,
+                centerY - lineStart - lineLength
+        );
+
         gRot.dispose();
     }
 
-    private void drawIdentified(Graphics2D g2, Velocity vel, Entity.IFF iff, int centerX, int centerY, int radius) {
+    private void drawIdentified(Graphics2D g2,
+                                Velocity vel,
+                                Entity.IFF iff,
+                                int centerX,
+                                int centerY,
+                                int radius) {
 
         double heading = getHeading(vel);
 
@@ -118,12 +140,32 @@ public class MFDCanvas extends JPanel {
         gRot.rotate(Math.toRadians(heading), centerX, centerY);
 
         switch (iff){
+
             case FRIEND:
+
                 gRot.setColor(Color.GREEN);
-                gRot.drawOval(centerX - radius / 2, centerY - radius / 2, radius, radius);
-                drawTrackLine(g2, Entity.IFF.FRIEND, heading, centerX,centerY);
+
+                int lineStart = radius / 2;
+                int lineLength = radius * 2 / 3;
+
+                gRot.drawOval(
+                        centerX - radius / 2,
+                        centerY - radius / 2,
+                        radius,
+                        radius
+                );
+
+                gRot.drawLine(
+                        centerX,
+                        centerY - lineStart,
+                        centerX,
+                        centerY - lineStart - lineLength
+                );
+
                 break;
+
             case HOSTILE:
+
                 gRot.setColor(Color.RED);
 
                 int nose = 2 * radius / 3;
@@ -137,14 +179,21 @@ public class MFDCanvas extends JPanel {
                 triangle.addPoint(centerX + halfWidth, centerY + base);
 
                 gRot.drawPolygon(triangle);
-                gRot.drawLine(centerX, centerY - nose, centerX, centerY - nose - radius);
+
+                gRot.drawLine(
+                        centerX,
+                        centerY - nose,
+                        centerX,
+                        centerY - nose - radius
+                );
 
                 break;
+
             case UNKNOWN:
-                break;
             case NEUTRAL:
                 break;
         }
+
         gRot.dispose();
     }
 

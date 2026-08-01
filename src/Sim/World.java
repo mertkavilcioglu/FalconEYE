@@ -41,6 +41,7 @@ public class World {
         createEntity(Entity.IFF.HOSTILE, new Vec3(140000.0, 140000.0, START_ALTITUDE-500), new Vec3(-180.0, -150.0, 0.0));
         createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 100000.0, 85000.0), new Vec3(-180.0, -150.0, 0.0));
 
+        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 120000, START_ALTITUDE), new Vec3(-164.0, 764.0, 0.0));
 
         player = createPlayer();
     }
@@ -163,7 +164,6 @@ public class World {
 
         // Velocity
         double headingDeg = random.nextDouble() * 360.0;
-
         double speedKt = SPAWN_MIN_SPEED_KT + random.nextDouble() * (SPAWN_MAX_SPEED_KT - SPAWN_MIN_SPEED_KT);
 
         double speedMS = speedKt / 1.94384;
