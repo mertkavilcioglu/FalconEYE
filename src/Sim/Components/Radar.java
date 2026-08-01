@@ -154,19 +154,18 @@ public class Radar extends Component {
     public boolean isInAzimuth(Vec3 relativePos){
 
         double bearing = getBearing(relativePos);
+        double targetOffset = getAngleDifference(bearing, heading);
 
-        double previousHeading = heading + previousBeamOffset;
-        double currentHeading = heading + beamOffset;
+        if(sweepingRight){
 
-        double beamTravel =
-                Math.abs(getAngleDifference(currentHeading, previousHeading));
+            return targetOffset >= previousBeamOffset - beamWidth / 2.0 &&
+                    targetOffset <= beamOffset + beamWidth / 2.0;
+        }
+        else{
 
-        double effectiveBeamWidth = beamWidth + beamTravel;
-
-        double angleDiff =
-                getAngleDifference(bearing, currentHeading);
-
-        return Math.abs(angleDiff) <= effectiveBeamWidth / 2.0;
+            return targetOffset <= previousBeamOffset + beamWidth / 2.0 &&
+                    targetOffset >= beamOffset - beamWidth / 2.0;
+        }
     }
 
 
