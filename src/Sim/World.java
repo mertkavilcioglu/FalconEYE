@@ -70,7 +70,7 @@ public class World {
         Vec3 pos = new Vec3(WORLD_ORIGIN, WORLD_ORIGIN, START_ALTITUDE);
         e.addComponent(new Transform(pos));
 
-        Vec3 vel = new Vec3(0.0, 250.0, 0.0);
+        Vec3 vel = new Vec3(0.0, 180.0, 0.0);
         e.addComponent(new Velocity(vel));
 
         e.addComponent(new Rigidbody());

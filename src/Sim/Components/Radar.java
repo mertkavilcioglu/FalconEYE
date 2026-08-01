@@ -402,6 +402,17 @@ public class Radar extends Component {
         updatePitch();
     }
 
+    public void clearContacts(){
+        contacts.clear();
+    }
+
+    public void removeInvalidContacts() {
+
+        contacts.entrySet().removeIf(entry ->
+                parent.getWorld().getEntities().get(entry.getKey()) == null
+        );
+    }
+
 
     public double getBeamOffset(){
         return beamOffset;

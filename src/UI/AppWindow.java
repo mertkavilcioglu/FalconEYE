@@ -1,5 +1,6 @@
 package UI;
 import App.EYEApp;
+import Sim.Components.Radar;
 import Sim.Entity;
 import Sim.World;
 
@@ -66,21 +67,32 @@ public class AppWindow extends JFrame {
 
 
 
-
-
-
-
-
-        //DELETE BUTTONS
+        // DELETE BUTTONS new
         targetControlPanel.getFriendlyPanel().getDeleteButton().addActionListener(e -> {
             app.getWorld().removeAllEntities(Entity.IFF.FRIEND);
+            app.getWorld().getPlayer().getComponent(Radar.class).removeInvalidContacts();
+
             refreshUI();
         });
 
         targetControlPanel.getEnemyPanel().getDeleteButton().addActionListener(e -> {
             app.getWorld().removeAllEntities(Entity.IFF.HOSTILE);
+            app.getWorld().getPlayer().getComponent(Radar.class).removeInvalidContacts();
             refreshUI();
         });
+
+
+
+//        //DELETE BUTTONS old
+//        targetControlPanel.getFriendlyPanel().getDeleteButton().addActionListener(e -> {
+//            app.getWorld().removeAllEntities(Entity.IFF.FRIEND);
+//            refreshUI();
+//        });
+//
+//        targetControlPanel.getEnemyPanel().getDeleteButton().addActionListener(e -> {
+//            app.getWorld().removeAllEntities(Entity.IFF.HOSTILE);
+//            refreshUI();
+//        });
 
 
 
