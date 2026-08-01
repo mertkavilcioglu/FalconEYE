@@ -31,7 +31,7 @@ public class Radar extends Component {
     private double beamSpeed = 60.0;
     private boolean sweepingRight = true;
 
-    private long contactTimeout = 5000; // ms
+    private long contactTimeout = 10000; // ms
 
     private int bars = 4;
     private final int[] barOptions = {4, 1, 2};

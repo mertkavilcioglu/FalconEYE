@@ -18,9 +18,6 @@ public class World {
     private EYEApp app;
     private HashMap<Integer, Entity> entities = new HashMap<>();
     private int entityId = 1;
-
-    public static final double START_ALTITUDE = 4572.0; // 15.000 feet
-    public static final double WORLD_ORIGIN = 100000.0;
     private Entity player;
 
     private final Random random = new Random();
@@ -34,15 +31,7 @@ public class World {
 
     public World(EYEApp app){
         this.app = app;
-
-        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 120000.0, START_ALTITUDE), new Vec3(0.0, 270.0, 0.0));
-        createEntity(Entity.IFF.FRIEND, new Vec3(100000.0, 173000.0, START_ALTITUDE), new Vec3(0.0, -280.0, 0.0));
-        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 176000.0, START_ALTITUDE), new Vec3(-180.0, -150.0, 0.0));
-        createEntity(Entity.IFF.HOSTILE, new Vec3(140000.0, 140000.0, START_ALTITUDE-500), new Vec3(-180.0, -150.0, 0.0));
-        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 100000.0, 85000.0), new Vec3(-180.0, -150.0, 0.0));
-
-        createEntity(Entity.IFF.HOSTILE, new Vec3(100000.0, 120000, START_ALTITUDE), new Vec3(-164.0, 764.0, 0.0));
-
+        createDemoScenario();
         player = createPlayer();
     }
 
@@ -218,6 +207,41 @@ public class World {
 
     public Entity getPlayer(){
         return player;
+    }
+
+    public void createDemoScenario(){
+
+        // ENEMIES
+
+        // Enemy 4-ship formation (upper-left) -> South-East
+        createEntity(Entity.IFF.HOSTILE, new Vec3(70000.0, 165000.0, START_ALTITUDE + 1200), new Vec3(180.0, -180.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(73000.0, 168000.0, START_ALTITUDE + 1200), new Vec3(180.0, -180.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(76000.0, 171000.0, START_ALTITUDE + 1200), new Vec3(180.0, -180.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(79000.0, 174000.0, START_ALTITUDE + 1200), new Vec3(180.0, -180.0, 0.0));
+
+        // Enemy pair (upper-right) -> West
+        createEntity(Entity.IFF.HOSTILE, new Vec3(129000.0, 171000.0, START_ALTITUDE + 600), new Vec3(-260.0, 0.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(133000.0, 168000.0, START_ALTITUDE + 600), new Vec3(-260.0, 0.0, 0.0));
+
+        // Enemy pair (center) -> South (towards player)
+        createEntity(Entity.IFF.HOSTILE, new Vec3(98000.0, 169000.0, START_ALTITUDE + 300), new Vec3(0.0, -260.0, 0.0));
+        createEntity(Entity.IFF.HOSTILE, new Vec3(102000.0, 169000.0, START_ALTITUDE + 300), new Vec3(0.0, -260.0, 0.0));
+
+
+        // FRIENDLIES
+
+        // Single friendly (bottom-left) -> South-West
+        createEntity(Entity.IFF.FRIEND, new Vec3(88000.0, 126000.0, START_ALTITUDE - 500), new Vec3(-180.0, -180.0, 0.0));
+
+        // Friendly 4-ship formation (bottom-center) -> North
+        createEntity(Entity.IFF.FRIEND, new Vec3(94000.0, 129000.0, START_ALTITUDE - 300), new Vec3(0.0, 260.0, 0.0));
+        createEntity(Entity.IFF.FRIEND, new Vec3(98000.0, 129000.0, START_ALTITUDE - 300), new Vec3(0.0, 260.0, 0.0));
+        createEntity(Entity.IFF.FRIEND, new Vec3(102000.0, 129000.0, START_ALTITUDE - 300), new Vec3(0.0, 260.0, 0.0));
+        createEntity(Entity.IFF.FRIEND, new Vec3(106000.0, 129000.0, START_ALTITUDE - 300), new Vec3(0.0, 260.0, 0.0));
+
+        // Friendly pair (bottom-right) -> South
+        createEntity(Entity.IFF.FRIEND, new Vec3(113000.0, 131000.0, START_ALTITUDE), new Vec3(0.0, -240.0, 0.0));
+        createEntity(Entity.IFF.FRIEND, new Vec3(117000.0, 129500.0, START_ALTITUDE), new Vec3(0.0, -240.0, 0.0));
     }
 
 
