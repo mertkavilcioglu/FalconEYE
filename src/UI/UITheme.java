@@ -8,33 +8,27 @@ public class UITheme {
     public static final Color CARD_BG = new Color(46, 46, 46);
     public static final Color TREE_BG = new Color(46, 46, 46);
     public static final Color BORDER = new Color(135,135,135);
-
     public static final Color BUTTON = new Color(72,72,72);
     public static final Color BUTTON_HOVER = new Color(88,88,88);
     public static final Color BUTTON_PRESSED = new Color(58,58,58);
-
     public static final Color DELETE_BUTTON = new Color(120,35,35);
     public static final Color DELETE_BUTTON_HOVER = new Color(165,70,70);
     public static final Color DELETE_BUTTON_PRESSED = new Color(115,25,25);
-
     public static final Color TITLE = Color.WHITE;
     public static final Color DESCRIPTION = new Color(215,215,215);
-
     public static final Color FRIENDLY = new Color(90,210,255);
     public static final Color ENEMY = new Color(255,70,70);
     public static final Color TARGETS = new Color(255,215,0);
-
     public static final Color SCROLL_TRACK = new Color(35, 35, 35);
     public static final Color SCROLL_THUMB = new Color(72, 72, 72);
     public static final Color SCROLL_THUMB_HOVER = new Color(90, 90, 90);
-
     public static final Color OSB = Color.LIGHT_GRAY;
     public static final Color OSB_HOVER = new Color(180,180,180);
     public static final Color OSB_PRESSED = new Color(140,140,140);
-
     public static final Color TREE_SELECTION = new Color(82,82,82);
-
     public static final Color TREE_HOVER = new Color(68,68,68);
+    public static final Color SECTION_BG = new Color(52, 52, 52);
+    public static final Color SEPARATOR = new Color(110,110,110);
 
 //    default theme
 //

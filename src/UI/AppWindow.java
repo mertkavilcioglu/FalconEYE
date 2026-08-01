@@ -39,6 +39,8 @@ public class AppWindow extends JFrame {
         });
 
 
+
+
         Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         setBounds(bounds);
         setResizable(false);

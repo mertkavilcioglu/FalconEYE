@@ -7,9 +7,11 @@ import Sim.Components.Rigidbody;
 import Sim.Components.Transform;
 import Sim.Components.Velocity;
 import UI.Screen.MFDCanvas;
+import static Sim.SimSettings.*;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.Random;
 
 public class World {
 
@@ -17,10 +19,11 @@ public class World {
     private HashMap<Integer, Entity> entities = new HashMap<>();
     private int entityId = 1;
 
-    public static final double START_ALTITUDE = 3048.0; // 10.000 feet
+    public static final double START_ALTITUDE = 4572.0; // 10.000 feet
     public static final double WORLD_ORIGIN = 100000.0;
     private Entity player;
 
+    private final Random random = new Random();
 
     public World(EYEApp app){
         this.app = app;
@@ -86,6 +89,59 @@ public class World {
                 entity != player &&
                         entity.getIff() == iff
         );
+    }
+
+    public Entity createRandomEntity(Entity.IFF iff){
+
+        Transform playerTransform = player.getComponent(Transform.class);
+        Radar radar = player.getComponent(Radar.class);
+
+
+        // Position
+        double bearingDeg = -SPAWN_BEARING_LIMIT_DEG + random.nextDouble() * (SPAWN_BEARING_LIMIT_DEG * 2.0);
+        double rangeNM = SPAWN_MIN_RANGE_NM + random.nextDouble() * (SPAWN_MAX_RANGE_NM - SPAWN_MIN_RANGE_NM);
+        double rangeMeters = rangeNM * 1852.0;
+
+        double worldBearing = radar.getHeading() + bearingDeg;
+        double bearingRad = Math.toRadians(worldBearing);
+
+        double x = playerTransform.position.x + Math.sin(bearingRad) * rangeMeters;
+        double y = playerTransform.position.y + Math.cos(bearingRad) * rangeMeters;
+
+
+        // Altitude
+        double playerAltitudeFt = playerTransform.position.z * 3.28084;
+        double altitudeOffsetFt;
+
+        if(rangeNM < SPAWN_CLOSE_RANGE_NM){
+            altitudeOffsetFt = -SPAWN_CLOSE_ALTITUDE_OFFSET_FT + random.nextDouble() * (SPAWN_CLOSE_ALTITUDE_OFFSET_FT * 2.0);
+        }
+        else if(rangeNM < SPAWN_MEDIUM_RANGE_NM){
+            altitudeOffsetFt = -SPAWN_MEDIUM_ALTITUDE_OFFSET_FT + random.nextDouble() * (SPAWN_MEDIUM_ALTITUDE_OFFSET_FT * 2.0);
+        }
+        else{
+            altitudeOffsetFt = -SPAWN_FAR_ALTITUDE_OFFSET_FT + random.nextDouble() * (SPAWN_FAR_ALTITUDE_OFFSET_FT * 2.0);
+        }
+
+        double altitudeFt = playerAltitudeFt + altitudeOffsetFt;
+        altitudeFt = Math.max(SPAWN_MIN_ALTITUDE_FT, Math.min(SPAWN_MAX_ALTITUDE_FT, altitudeFt));
+
+        double z = altitudeFt / 3.28084;
+
+
+        // Velocity
+        double headingDeg = random.nextDouble() * 360.0;
+
+        double speedKt = SPAWN_MIN_SPEED_KT + random.nextDouble() * (SPAWN_MAX_SPEED_KT - SPAWN_MIN_SPEED_KT);
+
+        double speedMS = speedKt / 1.94384;
+
+        double headingRad = Math.toRadians(headingDeg);
+
+        Vec3 velocity = new Vec3(Math.sin(headingRad) * speedMS, Math.cos(headingRad) * speedMS, 0.0);
+
+        // Create
+        return createEntity(iff, new Vec3(x, y, z), velocity);
     }
 
     public HashMap<Integer, Entity> getEntities() {

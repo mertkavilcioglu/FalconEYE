@@ -168,7 +168,7 @@ public class HierarchyView extends JPanel {
                     setForeground(UITheme.FRIENDLY);
                     setFont(base.deriveFont(Font.BOLD,18f));
                 }
-                else if(text.startsWith("ENEMIES")){
+                else if(text.startsWith("HOSTILES")){
                     setForeground(UITheme.ENEMY);
                     setFont(base.deriveFont(Font.BOLD,18f));
                 }
@@ -367,7 +367,7 @@ public class HierarchyView extends JPanel {
         }
 
         friendliesNode.setUserObject("FRIENDLIES (" + friendlyCount + ")");
-        enemiesNode.setUserObject("ENEMIES (" + enemyCount + ")");
+        enemiesNode.setUserObject("HOSTILES (" + enemyCount + ")");
 
         treeModel.reload();
         expandNode(new TreePath(rootNode));
@@ -500,7 +500,7 @@ public class HierarchyView extends JPanel {
         DefaultMutableTreeNode friendlies = (DefaultMutableTreeNode) rootNode.getChildAt(0);
         DefaultMutableTreeNode enemies = (DefaultMutableTreeNode) rootNode.getChildAt(1);
         friendlies.setUserObject("FRIENDLIES (" + friendlies.getChildCount() + ")");
-        enemies.setUserObject("ENEMIES (" + enemies.getChildCount() + ")");
+        enemies.setUserObject("HOSTILES (" + enemies.getChildCount() + ")");
 
         treeModel.nodeChanged(friendlies);
         treeModel.nodeChanged(enemies);
