@@ -73,8 +73,19 @@ public class World {
     }
 
     public void removeEntity(int id){
+
         Entity e = entities.remove(id);
-        e.setActive(false);
+        if(e != null){
+            e.setActive(false);
+        }
+    }
+
+    public void removeAllEntities(Entity.IFF iff){
+
+        entities.values().removeIf(entity ->
+                entity != player &&
+                        entity.getIff() == iff
+        );
     }
 
     public HashMap<Integer, Entity> getEntities() {

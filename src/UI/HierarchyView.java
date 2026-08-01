@@ -339,6 +339,40 @@ public class HierarchyView extends JPanel {
         updateCounters();
     }
 
+    public void rebuild(World world){
+
+        rootNode.removeAllChildren();
+        nodeMap.clear();
+
+        DefaultMutableTreeNode friendliesNode = new DefaultMutableTreeNode("FRIENDLIES (0)");
+        DefaultMutableTreeNode enemiesNode = new DefaultMutableTreeNode("ENEMIES (0)");
+
+        rootNode.add(friendliesNode);
+        rootNode.add(enemiesNode);
+
+        int friendlyCount = 0;
+        int enemyCount = 0;
+
+        for(Entity e : world.getEntities().values()){
+
+            if(e == world.getPlayer())
+                continue;
+
+            addEntity(e);
+
+            if(e.getIff() == Entity.IFF.FRIEND)
+                friendlyCount++;
+            else if(e.getIff() == Entity.IFF.HOSTILE)
+                enemyCount++;
+        }
+
+        friendliesNode.setUserObject("FRIENDLIES (" + friendlyCount + ")");
+        enemiesNode.setUserObject("ENEMIES (" + enemyCount + ")");
+
+        treeModel.reload();
+        expandNode(new TreePath(rootNode));
+    }
+
     public void updateEntity(Entity e){
 
         TargetTreeNodes nodes = nodeMap.get(e.getId());
@@ -431,30 +465,7 @@ public class HierarchyView extends JPanel {
     }
 
     public void initialize(World world){
-
-        rootNode.removeAllChildren();
-
-        DefaultMutableTreeNode friendlies = new DefaultMutableTreeNode("FRIENDLIES");
-        DefaultMutableTreeNode enemies = new DefaultMutableTreeNode("ENEMIES");
-
-        rootNode.add(friendlies);
-        rootNode.add(enemies);
-
-        nodeMap.clear();
-
-        for(Entity e : world.getEntities().values()){
-
-            if(e == world.getPlayer())
-                continue;
-
-            addEntity(e);
-        }
-
-        treeModel.reload();
-        updateCounters();
-
-        expandAllExceptDetails();
-
+        rebuild(world);
     }
 
     public void updateAll(World world){

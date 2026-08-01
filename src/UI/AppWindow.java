@@ -1,5 +1,7 @@
 package UI;
 import App.EYEApp;
+import Sim.Entity;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,9 +22,19 @@ public class AppWindow extends JFrame {
         mfdView = new MFDView(app);
 
         hierarchyView.setSelectionListener(entityId -> {
-
             mfdView.getRadarScreen().getMfdCanvas().setSelectedEntityId(entityId);
+            mfdView.getRadarScreen().getMfdCanvas().refreshRadarDisplay();
+        });
 
+        targetControlPanel.getFriendlyPanel().getDeleteButton().addActionListener(e -> {
+            app.getWorld().removeAllEntities(Entity.IFF.FRIEND);
+            hierarchyView.rebuild(app.getWorld());
+            mfdView.getRadarScreen().getMfdCanvas().refreshRadarDisplay();
+        });
+
+        targetControlPanel.getEnemyPanel().getDeleteButton().addActionListener(e -> {
+            app.getWorld().removeAllEntities(Entity.IFF.HOSTILE);
+            hierarchyView.rebuild(app.getWorld());
             mfdView.getRadarScreen().getMfdCanvas().refreshRadarDisplay();
         });
 
