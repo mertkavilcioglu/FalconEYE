@@ -65,8 +65,10 @@ public class RadarContact {
         this.lastDetectionTime = time;
     }
 
-    public void increaseConfidence(){
-        confidence+=2;
+    public void increaseConfidence(int amount){
+
+        confidence += amount;
+
         if(confidence < 2){
             displayState = DisplayState.CONTACT;
         }
@@ -76,7 +78,6 @@ public class RadarContact {
         else if(displayState == DisplayState.TRACK && confidence >= 4){
             displayState = DisplayState.IDENTIFIED;
         }
-
     }
 
     public void decreaseConfidence(){

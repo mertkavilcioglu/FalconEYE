@@ -252,7 +252,7 @@ public class Radar extends Component {
             RadarContact c = it.next();
 
             if(c.wasDetectedThisSweep()){
-                c.increaseConfidence();
+                c.increaseConfidence(getConfidenceGain());
             }
             else{
                 c.decreaseConfidence();
@@ -264,6 +264,14 @@ public class Radar extends Component {
                 it.remove();
             }
         }
+    }
+
+    private int getConfidenceGain(){
+
+        if(bars == 4){
+            return 2;
+        }
+        return 1;
     }
 
     public void onSweepFinished(){
