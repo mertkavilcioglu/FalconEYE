@@ -39,6 +39,8 @@ public class Radar extends Component {
     private int currentBar = 0;
     private boolean movingUp = true;
 
+    private int beamId = 0;
+
     public Radar(){
 
     }
@@ -48,7 +50,6 @@ public class Radar extends Component {
         double deltaSeconds = deltaTime / 1000.0;
         updateBeam(deltaSeconds);
         predictContacts(deltaSeconds);
-        //decreaseConfidence();
         scan();
         removeExpiredContacts();
     }
@@ -114,6 +115,8 @@ public class Radar extends Component {
                 onSweepFinished();
             }
         }
+
+        beamId++;
     }
 
     public boolean isInRange(Transform parent, Transform target){
@@ -195,6 +198,7 @@ public class Radar extends Component {
                         velocity.getVelocity().z));
 
         contacts.put(e.getId(), contact);
+        contact.increaseConfidence(getConfidenceGain());
     }
 
 
@@ -226,7 +230,12 @@ public class Radar extends Component {
                 velocity.getVelocity().z));
 
         c.setLastDetectionTime(System.currentTimeMillis());
-        c.setDetectedThisSweep(true);
+
+        if(c.getLastBeamId() != beamId){
+
+            c.increaseConfidence(getConfidenceGain());
+            c.setLastBeamId(beamId);
+        }
     }
 
     private void predictContacts(double deltaSeconds){
@@ -254,34 +263,7 @@ public class Radar extends Component {
         }
     }
 
-    private void updateContactConfidence() {
-
-        Iterator<RadarContact> it = contacts.values().iterator();
-
-        while (it.hasNext()) {
-
-            RadarContact c = it.next();
-
-            if(c.wasDetectedThisSweep()){
-                c.increaseConfidence(getConfidenceGain());
-            }
-            else{
-                c.decreaseConfidence();
-            }
-
-            c.setDetectedThisSweep(false);
-
-            if(c.getConfidence() <= 0){
-                it.remove();
-            }
-        }
-    }
-
     private int getConfidenceGain(){
-
-        if(bars == 4){
-            return 2;
-        }
         return 1;
     }
 
@@ -318,7 +300,6 @@ public class Radar extends Component {
                 currentBar = 0;
                 movingUp = true;
 
-                updateContactConfidence();
             }
         }
         updatePitch();

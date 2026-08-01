@@ -3,6 +3,8 @@ package Sim;
 import Mathf.Vec3;
 import Sim.Components.Velocity;
 
+import static Sim.SimSettings.*;
+
 public class RadarContact {
 
     private int targetID;
@@ -15,8 +17,7 @@ public class RadarContact {
     private int confidence;
     private long lastDetectionTime;
     private DisplayState displayState;
-
-    private boolean detectedThisSweep;
+    private int lastBeamId = -1;
 
 
     public enum DisplayState {
@@ -42,7 +43,6 @@ public class RadarContact {
         confidence = 0;
         displayState = DisplayState.CONTACT;
         lastDetectionTime = System.currentTimeMillis();
-        detectedThisSweep = true;
     }
 
     public void setMeasuredPos(Vec3 measuredPos){
@@ -66,23 +66,30 @@ public class RadarContact {
     }
 
     public void increaseConfidence(int amount){
-
         confidence += amount;
-
-        if(confidence < 2){
-            displayState = DisplayState.CONTACT;
-        }
-        else if(displayState == DisplayState.CONTACT){
-            displayState = DisplayState.TRACK;
-        }
-        else if(displayState == DisplayState.TRACK && confidence >= 4){
-            displayState = DisplayState.IDENTIFIED;
-        }
+        updateDisplayState();
     }
 
     public void decreaseConfidence(){
-        if (confidence > 0)
+
+        if(confidence > 0){
             confidence--;
+        }
+
+        updateDisplayState();
+    }
+
+    private void updateDisplayState(){
+        //System.out.println(confidence);
+        if(confidence < CONTACT_TO_TRACK){
+            displayState = DisplayState.CONTACT;
+        }
+        else if(confidence < TRACK_TO_IDENTIFIED){
+            displayState = DisplayState.TRACK;
+        }
+        else{
+            displayState = DisplayState.IDENTIFIED;
+        }
     }
 
     public int getTargetID(){
@@ -117,11 +124,11 @@ public class RadarContact {
         return lastDetectionTime;
     }
 
-    public boolean wasDetectedThisSweep() {
-        return detectedThisSweep;
+    public int getLastBeamId() {
+        return lastBeamId;
     }
 
-    public void setDetectedThisSweep(boolean detectedThisSweep) {
-        this.detectedThisSweep = detectedThisSweep;
+    public void setLastBeamId(int lastBeamId) {
+        this.lastBeamId = lastBeamId;
     }
 }

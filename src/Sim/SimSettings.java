@@ -27,4 +27,6 @@ public final class SimSettings {
     public static final double SPAWN_MIN_SPEED_KT = 220.0;
     public static final double SPAWN_MAX_SPEED_KT = 520.0;
     public static final double FORMATION_SPACING_NM = 1.5;
+    public static final int CONTACT_TO_TRACK = 6;
+    public static final int TRACK_TO_IDENTIFIED = 12;;
 }
