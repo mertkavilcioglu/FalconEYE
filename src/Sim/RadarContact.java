@@ -67,13 +67,13 @@ public class RadarContact {
 
     public void increaseConfidence(){
         confidence+=2;
-        if(confidence < 10){
+        if(confidence < 2){
             displayState = DisplayState.CONTACT;
         }
         else if(displayState == DisplayState.CONTACT){
             displayState = DisplayState.TRACK;
         }
-        else if(displayState == DisplayState.TRACK && confidence >= 20){
+        else if(displayState == DisplayState.TRACK && confidence >= 4){
             displayState = DisplayState.IDENTIFIED;
         }
 

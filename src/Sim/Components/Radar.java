@@ -1,13 +1,8 @@
 package Sim.Components;
 
-import Mathf.Vec3;
-import Sim.Component;
-import Sim.Entity;
-import Sim.RadarContact;
+import Mathf.Vec3;import Sim.Component;import Sim.Entity;import Sim.RadarContact;
 
-import java.util.HashMap;
-import java.util.Iterator;
-
+import java.util.HashMap;import java.util.Iterator;
 
 public class Radar extends Component {
 
@@ -220,7 +215,6 @@ public class Radar extends Component {
                 velocity.getVelocity().z));
 
         c.setLastDetectionTime(System.currentTimeMillis());
-        c.increaseConfidence();
         c.setDetectedThisSweep(true);
     }
 
@@ -249,7 +243,7 @@ public class Radar extends Component {
         }
     }
 
-    private void decreaseConfidence() {
+    private void updateContactConfidence() {
 
         Iterator<RadarContact> it = contacts.values().iterator();
 
@@ -257,20 +251,22 @@ public class Radar extends Component {
 
             RadarContact c = it.next();
 
-            if (!c.wasDetectedThisSweep()) {
+            if(c.wasDetectedThisSweep()){
+                c.increaseConfidence();
+            }
+            else{
                 c.decreaseConfidence();
             }
 
             c.setDetectedThisSweep(false);
 
-            if (c.getConfidence() <= 0) {
+            if(c.getConfidence() <= 0){
                 it.remove();
             }
         }
     }
 
     public void onSweepFinished(){
-        decreaseConfidence();
         nextBar();
     }
 
@@ -299,8 +295,11 @@ public class Radar extends Component {
             currentBar--;
 
             if (currentBar <= 0) {
+
                 currentBar = 0;
                 movingUp = true;
+
+                updateContactConfidence();
             }
         }
         updatePitch();
@@ -403,5 +402,4 @@ public class Radar extends Component {
     public double getHeading(){
         return heading;
     }
-
 }
