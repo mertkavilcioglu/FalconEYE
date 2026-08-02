@@ -1,8 +1,11 @@
 package UI;
 import App.EYEApp;
 import Sim.Components.Radar;
-import Sim.Entity;
-import Sim.World;
+import Core.Entity;
+import Core.World;
+import UI.Hierarchy.HierarchyView;
+import UI.MFD.MFDView;
+import UI.TargetControl.TargetControlPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +20,6 @@ public class AppWindow extends JFrame {
     public AppWindow(EYEApp app){
         super("FalconEYE");
         this.app = app;
-        //setSize(1600, 900);
 
         hierarchyView = new HierarchyView();
         targetControlPanel = new TargetControlPanel();
@@ -27,7 +29,6 @@ public class AppWindow extends JFrame {
             mfdView.getRadarScreen().getMfdCanvas().setSelectedEntityId(entityId);
             mfdView.getRadarScreen().getMfdCanvas().refreshRadarDisplay();
         });
-
 
 
 
@@ -103,7 +104,6 @@ public class AppWindow extends JFrame {
         targetControlPanel.getFriendlyPanel().getDeleteButton().addActionListener(e -> {
             app.getWorld().removeAllEntities(Entity.IFF.FRIEND);
             app.getWorld().getPlayer().getComponent(Radar.class).removeInvalidContacts();
-
             refreshUI();
         });
 
@@ -112,21 +112,6 @@ public class AppWindow extends JFrame {
             app.getWorld().getPlayer().getComponent(Radar.class).removeInvalidContacts();
             refreshUI();
         });
-
-
-
-//        //DELETE BUTTONS old
-//        targetControlPanel.getFriendlyPanel().getDeleteButton().addActionListener(e -> {
-//            app.getWorld().removeAllEntities(Entity.IFF.FRIEND);
-//            refreshUI();
-//        });
-//
-//        targetControlPanel.getEnemyPanel().getDeleteButton().addActionListener(e -> {
-//            app.getWorld().removeAllEntities(Entity.IFF.HOSTILE);
-//            refreshUI();
-//        });
-
-
 
 
         Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();

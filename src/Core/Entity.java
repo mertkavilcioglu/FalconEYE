@@ -1,8 +1,4 @@
-package Sim;
-import Mathf.Vec3;
-import Sim.Components.Rigidbody;
-import Sim.Components.Transform;
-import Sim.Components.Velocity;
+package Core;
 
 import java.util.HashMap;
 

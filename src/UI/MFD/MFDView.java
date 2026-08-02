@@ -1,8 +1,10 @@
-package UI;
+package UI.MFD;
 
 import App.EYEApp;
 import Sim.Components.Radar;
-import UI.Screen.MFDScreen;
+import UI.MFD.Screen.MFDScreen;
+import UI.MFD.OSB.LeftOSBPanel;
+import UI.MFD.OSB.OSBPanel;
 
 import javax.swing.*;
 import java.awt.*;

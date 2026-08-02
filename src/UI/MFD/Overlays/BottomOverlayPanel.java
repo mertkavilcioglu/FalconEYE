@@ -1,7 +1,6 @@
-package UI.Screen;
+package UI.MFD.Overlays;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class BottomOverlayPanel extends JPanel {
 

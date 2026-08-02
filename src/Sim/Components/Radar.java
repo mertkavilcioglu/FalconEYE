@@ -1,6 +1,6 @@
 package Sim.Components;
 
-import Mathf.Vec3;import Sim.Component;import Sim.Entity;import Sim.RadarContact;
+import Mathf.Vec3;import Core.Component;import Core.Entity;import Sim.RadarContact;
 
 import java.util.HashMap;import java.util.Iterator;
 

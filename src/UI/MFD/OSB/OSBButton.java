@@ -1,4 +1,6 @@
-package UI;
+package UI.MFD.OSB;
+
+import UI.UITheme;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

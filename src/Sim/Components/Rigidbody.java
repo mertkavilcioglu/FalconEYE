@@ -1,7 +1,7 @@
 package Sim.Components;
 
-import Sim.Component;
-import Sim.Entity;
+import Core.Component;
+import Core.Entity;
 
 public class Rigidbody extends Component {
 

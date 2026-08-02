@@ -1,4 +1,6 @@
-package UI;
+package UI.TargetControl;
+
+import UI.UITheme;
 
 import javax.swing.*;
 import java.awt.*;

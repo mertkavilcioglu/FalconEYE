@@ -1,7 +1,7 @@
-package UI;
+package UI.MFD.OSB;
 
 import Sim.Components.Radar;
-import UI.Screen.MFDScreen;
+import UI.MFD.Screen.MFDScreen;
 
 import javax.swing.*;
 import java.awt.*;

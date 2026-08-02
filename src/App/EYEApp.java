@@ -1,7 +1,5 @@
 package App;
-import Mathf.Vec3;
-import Sim.Entity;
-import Sim.World;
+import Core.World;
 import UI.AppWindow;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,7 +11,6 @@ public class EYEApp {
     private World world;
     private int delta = 50;
 
-
     public void runWithWindow() throws InterruptedException, InvocationTargetException {
         world = new World(this);
         window = new AppWindow(this);
@@ -22,16 +19,12 @@ public class EYEApp {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                //mapView.initializeTheMap();
                 simTimer = new Timer(delta, new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         world.update(delta);
-                        //window.repaint(); //TODO: herhangi bir panelin çiziminde sıkıntı olursa burayı tekrar aç ve dene
-                        window.getMfdView()
-                                .getRadarScreen()
-                                .getMfdCanvas()
-                                .repaint();
+                        //window.repaint();
+                        window.getMfdView().getRadarScreen().getMfdCanvas().repaint();
                     }
                 });
                 simTimer.start();

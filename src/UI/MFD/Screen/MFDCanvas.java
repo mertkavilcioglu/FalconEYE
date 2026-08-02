@@ -1,12 +1,12 @@
-package UI.Screen;
+package UI.MFD.Screen;
 
 import Mathf.Vec3;
 import Sim.Components.Radar;
 import Sim.Components.Transform;
 import Sim.Components.Velocity;
-import Sim.Entity;
+import Core.Entity;
 import Sim.RadarContact;
-import Sim.World;
+import Core.World;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package UI;
+package UI.Hierarchy;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 

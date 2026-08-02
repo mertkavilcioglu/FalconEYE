@@ -1,4 +1,4 @@
-package UI;
+package UI.MFD.OSB;
 
 import javax.swing.*;
 import java.awt.*;

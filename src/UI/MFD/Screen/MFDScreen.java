@@ -1,6 +1,10 @@
-package UI.Screen;
+package UI.MFD.Screen;
 
 import App.EYEApp;
+import UI.MFD.Overlays.BottomOverlayPanel;
+import UI.MFD.Overlays.LeftOverlayPanel;
+import UI.MFD.Overlays.RightOverlayPanel;
+import UI.MFD.Overlays.TopOverlayPanel;
 
 import javax.swing.*;
 import java.awt.*;

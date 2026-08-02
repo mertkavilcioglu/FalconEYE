@@ -1,7 +1,7 @@
 package Sim.Components;
 
 import Mathf.Vec3;
-import Sim.Component;
+import Core.Component;
 
 public class Velocity extends Component {
 

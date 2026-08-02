@@ -1,6 +1,6 @@
 package Sim.Components;
 
-import Sim.Component;
+import Core.Component;
 import Mathf.Vec3;
 
 public class Transform extends Component {

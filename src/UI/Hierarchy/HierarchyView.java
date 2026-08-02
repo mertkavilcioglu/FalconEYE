@@ -1,4 +1,4 @@
-package UI;
+package UI.Hierarchy;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -11,11 +11,12 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.HashMap;
 
 import Sim.Components.Radar;
-import Sim.Entity;
-import Sim.World;
+import Core.Entity;
+import Core.World;
 import Sim.Components.Transform;
 import Sim.Components.Velocity;
 import Mathf.Vec3;
+import UI.UITheme;
 
 public class HierarchyView extends JPanel {
 
