@@ -9,6 +9,7 @@ import UI.TargetControl.TargetControlPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 
 public class AppWindow extends JFrame {
     private EYEApp app;
@@ -20,6 +21,13 @@ public class AppWindow extends JFrame {
     public AppWindow(EYEApp app){
         super("FalconEYE");
         this.app = app;
+
+        URL iconUrl = getClass().getResource("/Assets/falconeye_icon.png");
+        System.out.println(iconUrl);
+
+        if (iconUrl != null) {
+            setIconImage(new ImageIcon(iconUrl).getImage());
+        }
 
         hierarchyView = new HierarchyView();
         targetControlPanel = new TargetControlPanel();
