@@ -1,5 +1,7 @@
 package UI.MFD.Overlays;
 
+import UI.UIScale;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -21,7 +23,7 @@ public class TrianglePanel extends JPanel {
 
         Graphics2D g2 = (Graphics2D) g.create();
 
-        g2.setStroke(new BasicStroke(2f));
+        g2.setStroke(new BasicStroke(Math.max(1f, UIScale.scale(2))));
 
         int size = Math.min(getWidth(), getHeight()) / 2;
 
@@ -35,7 +37,7 @@ public class TrianglePanel extends JPanel {
         int drawY;
 
         if (up)
-            drawY = cy + offset +15;
+            drawY = cy + offset + UIScale.scale(13);
         else
             drawY = cy - offset + 1;
 

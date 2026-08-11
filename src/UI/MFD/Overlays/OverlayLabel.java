@@ -6,6 +6,7 @@ import java.awt.*;
 public class OverlayLabel extends JLabel {
 
     private final int margin;
+    private float fontScale = 1.0f;
 
     public OverlayLabel(String text) {
         this(text, 10);
@@ -16,13 +17,24 @@ public class OverlayLabel extends JLabel {
         this.margin = margin;
 
         setForeground(Color.WHITE);
-        setFont(getFont().deriveFont(Font.BOLD, getFont().getSize2D() *2f + 2));
-
+        setFont(getFont().deriveFont(Font.BOLD, 20f));
         setOpaque(false);
+    }
+
+    public OverlayLabel(String text, float fontScale) {
+        this(text);
+        this.fontScale = fontScale;
+    }
+
+    public OverlayLabel(String text, int margin, float fontScale) {
+        this(text, margin);
+        this.fontScale = fontScale;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
+
+        updateFontSize();
 
         Graphics2D g2 = (Graphics2D) g.create();
 
@@ -41,5 +53,10 @@ public class OverlayLabel extends JLabel {
         g2.dispose();
 
         super.paintComponent(g);
+    }
+
+    private void updateFontSize() {
+        float size = Math.max(16f, Math.min(30f, getHeight() * 0.29f * fontScale));
+        setFont(getFont().deriveFont(Font.BOLD, size));
     }
 }

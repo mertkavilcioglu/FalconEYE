@@ -30,7 +30,7 @@ public class LeftOverlayPanel extends JPanel {
         JPanel slot2 = new JPanel(new GridLayout(2, 1));
         slot2.setOpaque(false);
 
-        rangeLabel = createLabel("40", 25);
+        rangeLabel = new OverlayLabel("40", 25, 1.09f);
         slot2.add(rangeLabel);
 
         downTriangle = new TrianglePanel(false);
@@ -43,7 +43,7 @@ public class LeftOverlayPanel extends JPanel {
 
         int verticalMargin = 1;
 
-        azimuthLabel = createLabelVertical("A", "6", verticalMargin);
+        azimuthLabel = new OverlayLabel("<html><div style='text-align:center;'>A<br>6</div></html>", verticalMargin, 0.55f);
 
         slot3.add(azimuthLabel, BorderLayout.CENTER);
 
@@ -52,7 +52,7 @@ public class LeftOverlayPanel extends JPanel {
         JPanel slot4 = new JPanel(new BorderLayout());
         slot4.setOpaque(false);
 
-        barsLabel = createLabelVertical("4", "B", verticalMargin);
+        barsLabel = new OverlayLabel("<html><div style='text-align:center;'>4<br>B</div></html>", verticalMargin, 0.55f);
 
         slot4.add(barsLabel, BorderLayout.CENTER);
 

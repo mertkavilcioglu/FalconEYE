@@ -7,6 +7,7 @@ import Sim.Components.Velocity;
 import Core.Entity;
 import Sim.RadarContact;
 import Core.World;
+import UI.UIScale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,7 @@ import java.awt.*;
 public class MFDCanvas extends JPanel {
 
     private World world;
-    private int radius = 24;
+    private int radius = 18;
     private double scale;
     private int overlayThickness = 0;
 
@@ -33,6 +34,10 @@ public class MFDCanvas extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
 
         defineScale(world.getPlayer().getComponent(Radar.class).getRange());
+
+        Rectangle displayArea = getRadarDisplayArea();
+
+        radius = Math.max(16, Math.min(displayArea.width, displayArea.height) / 34);
 
         drawRadarDebug(g2);
         drawRollReference(g2);
@@ -589,7 +594,7 @@ public class MFDCanvas extends JPanel {
                 break;
         }
 
-        g2.setFont(oldFont.deriveFont(Font.BOLD, 20f));
+        g2.setFont(oldFont.deriveFont(Font.BOLD, Math.max((float) UIScale.scale(13), radius * 0.8f)));
 
         FontMetrics fm = g2.getFontMetrics();
 

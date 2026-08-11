@@ -5,6 +5,7 @@ import UI.MFD.Overlays.BottomOverlayPanel;
 import UI.MFD.Overlays.LeftOverlayPanel;
 import UI.MFD.Overlays.RightOverlayPanel;
 import UI.MFD.Overlays.TopOverlayPanel;
+import UI.UIScale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,14 +66,9 @@ public class MFDScreen extends JPanel {
         int margin = overlayThickness * 7 / 18 ;
 
         g2.setColor(Color.WHITE);
-        g2.setStroke(new BasicStroke(2f));
+        g2.setStroke(new BasicStroke(Math.max(1f, UIScale.scale(2))));
 
-        g2.drawRect(
-                margin,
-                margin,
-                w - margin * 2,
-                h - margin * 2
-        );
+        g2.drawRect(margin, margin, w - margin * 2, h - margin * 2);
     }
 
     private void layoutChildren() {

@@ -17,7 +17,7 @@ public class RightOverlayPanel extends JPanel {
                 JPanel section = new JPanel(new GridLayout(4, 1));
                 section.setOpaque(false);
 
-                JLabel contLabel = new OverlayLabel("CONT");
+                JLabel contLabel = new OverlayLabel("CONT", 2f);
 
                 section.add(contLabel);
                 section.add(new JLabel());
