@@ -1,5 +1,6 @@
 package UI.TargetControl;
 
+import UI.UIScale;
 import UI.UITheme;
 
 import javax.swing.*;
@@ -55,9 +56,9 @@ public class ToolButton extends JButton {
             }
         });
 
-        setFont(getFont().deriveFont(Font.BOLD,15f));
+        setFont(getFont().deriveFont(Font.BOLD, (float) UIScale.scale(15)));
         setBorder(BorderFactory.createLineBorder(Color.GRAY));
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        setPreferredSize(new Dimension(0, 50));
+        setPreferredSize(new Dimension(0, UIScale.scale(50)));
     }
 }

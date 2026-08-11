@@ -2,6 +2,7 @@ package UI.MFD.OSB;
 
 import Sim.Components.Radar;
 import UI.MFD.Screen.MFDScreen;
+import UI.UIScale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +18,7 @@ public class LeftOSBPanel extends JPanel {
         this.radar = radar;
         this.mfdScreen = mfdScreen;
 
-        setPreferredSize(new Dimension(width, height));
+        setPreferredSize(new Dimension(UIScale.scale(width), UIScale.scale(height)));
         setBackground(Color.GRAY);
 
         setLayout(new GridLayout(7,1));

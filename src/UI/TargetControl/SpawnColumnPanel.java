@@ -7,6 +7,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import UI.UIScale;
 import static Sim.SimSettings.*;
 
 public class SpawnColumnPanel extends JPanel {
@@ -30,8 +31,8 @@ public class SpawnColumnPanel extends JPanel {
     public SpawnColumnPanel(String title, Color titleColor){
 
         setOpaque(false);
-        setBorder(new EmptyBorder(15,15,15,15));
-        setLayout(new BorderLayout(0,15));
+        setBorder(new EmptyBorder(UIScale.scale(15), UIScale.scale(15), UIScale.scale(15), UIScale.scale(15)));
+        setLayout(new BorderLayout(0, UIScale.scale(15)));
 
         // TOP
         JPanel top = new JPanel();
@@ -44,10 +45,10 @@ public class SpawnColumnPanel extends JPanel {
         titleLabel = new JLabel(title);
         titleLabel.setForeground(titleColor);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD,22f));
+        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, (float) UIScale.scale(22)));
 
         top.add(iconLabel);
-        top.add(Box.createVerticalStrut(10));
+        top.add(Box.createVerticalStrut(UIScale.scale(10)));
         top.add(titleLabel);
 
         // BUTTONS
@@ -67,9 +68,9 @@ public class SpawnColumnPanel extends JPanel {
         content.setOpaque(false);
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 
-        content.add(Box.createVerticalStrut(12));
+        content.add(Box.createVerticalStrut(UIScale.scale(12)));
 
-        int gapBetweenSections = 35; //25
+        int gapBetweenSections = UIScale.scale(35);
 
         content.add(createRangeSection(
                 "CLOSE RANGE",
@@ -127,7 +128,11 @@ public class SpawnColumnPanel extends JPanel {
 
         panel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(UITheme.BORDER,1),
-                new EmptyBorder(12,12,12,12)
+                new EmptyBorder(
+                        UIScale.scale(12),
+                        UIScale.scale(12),
+                        UIScale.scale(12),
+                        UIScale.scale(12))
         ));
 
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -135,12 +140,12 @@ public class SpawnColumnPanel extends JPanel {
         JLabel titleLabel = new JLabel(title);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setForeground(UITheme.TITLE);
-        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD,17f));
+        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, (float) UIScale.scale(17)));
 
         JLabel descLabel = new JLabel(description);
         descLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         descLabel.setForeground(UITheme.DESCRIPTION);
-        descLabel.setFont(descLabel.getFont().deriveFont(Font.PLAIN,12f));
+        descLabel.setFont(descLabel.getFont().deriveFont(Font.PLAIN, (float) UIScale.scale(12)));
 
         // SEPARATOR
         JSeparator separator = new JSeparator();
@@ -152,7 +157,7 @@ public class SpawnColumnPanel extends JPanel {
         // BUTTONS
         singleButton.setText("Create Single");
         formationButton.setText("Create in Formation");
-        JPanel buttons = new JPanel(new GridLayout(2,1,0,10));
+        JPanel buttons = new JPanel(new GridLayout(2, 1, 0, UIScale.scale(10)));
         buttons.setOpaque(false);
         buttons.add(singleButton);
         buttons.add(formationButton);
@@ -160,11 +165,11 @@ public class SpawnColumnPanel extends JPanel {
 
         // LAYOUT
         panel.add(titleLabel);
-        panel.add(Box.createVerticalStrut(4));
+        panel.add(Box.createVerticalStrut(UIScale.scale(4)));
         panel.add(descLabel);
-        panel.add(Box.createVerticalStrut(6));
+        panel.add(Box.createVerticalStrut(UIScale.scale(6)));
         panel.add(separator);
-        panel.add(Box.createVerticalStrut(10));
+        panel.add(Box.createVerticalStrut(UIScale.scale(10)));
         panel.add(buttons);
 
         return panel;

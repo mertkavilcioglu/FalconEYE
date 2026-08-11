@@ -16,6 +16,7 @@ import Core.World;
 import Sim.Components.Transform;
 import Sim.Components.Velocity;
 import Mathf.Vec3;
+import UI.UIScale;
 import UI.UITheme;
 
 public class HierarchyView extends JPanel {
@@ -42,12 +43,19 @@ public class HierarchyView extends JPanel {
         JPanel topContainer = new JPanel();
         topContainer.setOpaque(false);
         topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
-        topContainer.setBorder(new EmptyBorder(20,20,20,20));
+        topContainer.setBorder(
+                new EmptyBorder(
+                        UIScale.scale(20),
+                        UIScale.scale(20),
+                        UIScale.scale(20),
+                        UIScale.scale(20)
+                )
+        );
 
         JLabel title = new JLabel("TARGET HIERARCHY");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setForeground(UITheme.TITLE);
-        title.setFont(title.getFont().deriveFont(Font.BOLD,35f));
+        title.setFont(title.getFont().deriveFont(Font.BOLD, (float) UIScale.scale(35)));
 
         topContainer.add(title);
         topContainer.add(Box.createVerticalStrut(10));
@@ -68,7 +76,7 @@ public class HierarchyView extends JPanel {
         description.setAlignmentX(Component.CENTER_ALIGNMENT);
         description.setHorizontalAlignment(SwingConstants.CENTER);
         description.setForeground(UITheme.DESCRIPTION);
-        description.setFont(description.getFont().deriveFont(Font.PLAIN,18f));
+        description.setFont(description.getFont().deriveFont(Font.PLAIN, (float) UIScale.scale(18)));
         topContainer.add(description);
         topContainer.add(Box.createVerticalStrut(20));
 
@@ -84,9 +92,9 @@ public class HierarchyView extends JPanel {
         tree.setBackground(UITheme.CARD_BG);
         tree.setForeground(UITheme.TITLE);
 
-        tree.setRowHeight(24);
+        tree.setRowHeight(UIScale.scale(24));
 
-        tree.setFont(tree.getFont().deriveFont(Font.PLAIN,16f));
+        tree.setFont(tree.getFont().deriveFont(Font.PLAIN, (float) UIScale.scale(17)));
 
         tree.addMouseMotionListener(new MouseMotionAdapter() {
 
@@ -163,19 +171,19 @@ public class HierarchyView extends JPanel {
 
                 if(text.startsWith("TARGETS")){
                     setForeground(UITheme.TARGETS);
-                    setFont(base.deriveFont(Font.BOLD,18f));
+                    setFont(base.deriveFont(Font.BOLD, (float) UIScale.scale(19)));
                 }
                 else if(text.startsWith("FRIENDLIES")){
                     setForeground(UITheme.FRIENDLY);
-                    setFont(base.deriveFont(Font.BOLD,18f));
+                    setFont(base.deriveFont(Font.BOLD, (float) UIScale.scale(19)));
                 }
                 else if(text.startsWith("HOSTILES")){
                     setForeground(UITheme.ENEMY);
-                    setFont(base.deriveFont(Font.BOLD,18f));
+                    setFont(base.deriveFont(Font.BOLD, (float) UIScale.scale(19)));
                 }
                 else{
                     setForeground(UITheme.TITLE);
-                    setFont(base.deriveFont(Font.PLAIN,16f));
+                    setFont(base.deriveFont(Font.PLAIN, (float) UIScale.scale(18)));
                 }
 
                 return this;
@@ -258,10 +266,20 @@ public class HierarchyView extends JPanel {
         add(topContainer, BorderLayout.CENTER);
 
         setBorder(BorderFactory.createCompoundBorder(
-                new EmptyBorder(10,10,10,10),
+                new EmptyBorder(
+                        UIScale.scale(10),
+                        UIScale.scale(10),
+                        UIScale.scale(10),
+                        UIScale.scale(10)
+                ),
                 BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(UITheme.BORDER,3),
-                        new EmptyBorder(10,10,10,10)
+                        BorderFactory.createLineBorder(UITheme.BORDER, UIScale.scale(3)),
+                        new EmptyBorder(
+                                UIScale.scale(10),
+                                UIScale.scale(10),
+                                UIScale.scale(10),
+                                UIScale.scale(10)
+                        )
                 )
         ));
     }

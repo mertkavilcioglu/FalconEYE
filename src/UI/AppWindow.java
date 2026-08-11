@@ -22,6 +22,9 @@ public class AppWindow extends JFrame {
         super("FalconEYE");
         this.app = app;
 
+        Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        UIScale.update(bounds.width, bounds.height);
+
         URL iconUrl = getClass().getResource("/Assets/falconeye_icon.png");
         System.out.println(iconUrl);
 
@@ -121,8 +124,6 @@ public class AppWindow extends JFrame {
             refreshUI();
         });
 
-
-        Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         setBounds(bounds);
         setResizable(false);
         setLayout(new BorderLayout(0,0));

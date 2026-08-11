@@ -1,5 +1,6 @@
 package UI.MFD.OSB;
 
+import UI.UIScale;
 import UI.UITheme;
 
 import javax.swing.*;
@@ -14,18 +15,24 @@ public class OSBButton extends JButton {
 
         super(text);
 
-        setPreferredSize(new Dimension(80,80));
+        setPreferredSize(
+                new Dimension(
+                        UIScale.scale(80),
+                        UIScale.scale(80)
+                )
+        );
 
         setBackground(UITheme.OSB);
 
         setBorder(BorderFactory.createCompoundBorder(
-                new LineBorder(UITheme.OSB,10),
-                new LineBorder(Color.WHITE,5)
+                new LineBorder(UITheme.OSB, UIScale.scale(10)),
+                new LineBorder(Color.WHITE, UIScale.scale(5))
         ));
 
         setFocusable(false);
         setContentAreaFilled(false);
         setOpaque(true);
+
         addMouseListener(new MouseAdapter() {
 
             @Override
@@ -59,8 +66,8 @@ public class OSBButton extends JButton {
         setBackground(color);
 
         setBorder(BorderFactory.createCompoundBorder(
-                new LineBorder(color,10),
-                new LineBorder(Color.WHITE,5)
+                new LineBorder(color, UIScale.scale(10)),
+                new LineBorder(Color.WHITE, UIScale.scale(5))
         ));
     }
 }

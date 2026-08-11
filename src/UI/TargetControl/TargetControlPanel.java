@@ -5,6 +5,7 @@ import UI.UITheme;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import UI.UIScale;
 
 public class TargetControlPanel extends JPanel {
 
@@ -24,22 +25,20 @@ public class TargetControlPanel extends JPanel {
         JPanel topContainer = new JPanel();
         topContainer.setOpaque(false);
         topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
-        topContainer.setBorder(new EmptyBorder(20, 20, 20, 20));
-
+        topContainer.setBorder(new EmptyBorder(UIScale.scale(20), UIScale.scale(20), UIScale.scale(20), UIScale.scale(20)));
         JLabel title = new JLabel("CREATE TARGETS");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setForeground(UITheme.TITLE);
-        title.setFont(title.getFont().deriveFont(Font.BOLD, 35f));
-
+        title.setFont(title.getFont().deriveFont(Font.BOLD, (float) UIScale.scale(35)));
         topContainer.add(title);
-        topContainer.add(Box.createVerticalStrut(10));
+        topContainer.add(Box.createVerticalStrut(UIScale.scale(10)));
 
 
         JSeparator separator = new JSeparator();
         separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
 
         topContainer.add(separator);
-        topContainer.add(Box.createVerticalStrut(12));
+        topContainer.add(Box.createVerticalStrut(UIScale.scale(12)));
 
         JLabel description = new JLabel(
                 "<html><div style='text-align:center;'>"
@@ -51,12 +50,12 @@ public class TargetControlPanel extends JPanel {
         description.setAlignmentX(Component.CENTER_ALIGNMENT);
         description.setHorizontalAlignment(SwingConstants.CENTER);
         description.setForeground(UITheme.DESCRIPTION);
-        description.setFont(description.getFont().deriveFont(Font.PLAIN, 18f));
+        description.setFont(description.getFont().deriveFont(Font.PLAIN, (float) UIScale.scale(18)));
 
         topContainer.add(description);
-        topContainer.add(Box.createVerticalStrut(20));
+        topContainer.add(Box.createVerticalStrut(UIScale.scale(20)));
 
-        JPanel cards = new JPanel(new GridLayout(1, 2, 15, 0));
+        JPanel cards = new JPanel(new GridLayout(1, 2, UIScale.scale(15), 0));
         cards.setOpaque(false);
 
         friendlyPanel = new SpawnColumnPanel("FRIENDLY", UITheme.FRIENDLY);
@@ -72,10 +71,23 @@ public class TargetControlPanel extends JPanel {
         add(topContainer, BorderLayout.NORTH);
 
         setBorder(BorderFactory.createCompoundBorder(
-                new EmptyBorder(10, 10, 10, 10),
+                new EmptyBorder(
+                        UIScale.scale(10),
+                        UIScale.scale(10),
+                        UIScale.scale(10),
+                        UIScale.scale(10)
+                ),
                 BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(UITheme.BORDER, 3),
-                        new EmptyBorder(10, 10, 10, 10)
+                        BorderFactory.createLineBorder(
+                                UITheme.BORDER,
+                                UIScale.scale(3)
+                        ),
+                        new EmptyBorder(
+                                UIScale.scale(10),
+                                UIScale.scale(10),
+                                UIScale.scale(10),
+                                UIScale.scale(10)
+                        )
                 )
         ));
 
@@ -95,7 +107,12 @@ public class TargetControlPanel extends JPanel {
 
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(UITheme.BORDER),
-                new EmptyBorder(10, 10, 10, 10)));
+                new EmptyBorder(
+                        UIScale.scale(10),
+                        UIScale.scale(10),
+                        UIScale.scale(10),
+                        UIScale.scale(10)
+                )));
 
         card.add(content);
         return card;

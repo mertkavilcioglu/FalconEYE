@@ -1,5 +1,7 @@
 package UI.MFD.OSB;
 
+import UI.UIScale;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -9,7 +11,12 @@ public class OSBPanel extends JPanel {
 
     public OSBPanel(int width, int height, int[] buttonNumbers){
 
-        setPreferredSize(new Dimension(width, height));
+        setPreferredSize(
+                new Dimension(
+                        UIScale.scale(width),
+                        UIScale.scale(height)
+                )
+        );
         setBackground(Color.GRAY);
 
         // TOP & BOTTOM
@@ -30,7 +37,7 @@ public class OSBPanel extends JPanel {
 
                 if(i == 0 || i == 8){ // corner buttons
                     btn = new JButton();
-                    btn.setPreferredSize(new Dimension(80,120));
+                    btn.setPreferredSize(new Dimension(UIScale.scale(80), UIScale.scale(120)));
                     btn.setBackground(Color.LIGHT_GRAY);
                     btn.setFocusable(false);
                 }
