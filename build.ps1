@@ -1,5 +1,5 @@
-$project = "C:\Users\Mert\IdeaProjects\FalconEYE"
-$jpackage = "C:\Users\Mert\.jdks\openjdk-26\bin\jpackage.exe"
+$project = $PSScriptRoot
+$jpackage = "C:\Users\Mert\.jdks\openjdk-26.0.2\bin\jpackage.exe"
 
 $jarDir = "$project\out\artifacts\FalconEYE_jar"
 $jar = "FalconEYE.jar"
